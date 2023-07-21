@@ -94,8 +94,8 @@ public class WebSecurityConfig { // 이 개 같은거 설명좀 해주실 분 ?
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-                        .requestMatchers("/api/user/signup/**").permitAll() // '/api/users/'로 시작하는 요청 모두 접근 허가
-                        .requestMatchers("/api/user/login/**").permitAll() // '/api/users/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers("/api/auth/signup/**").permitAll() // '/api/users/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers("/api/auth/login/**").permitAll() // '/api/users/'로 시작하는 요청 모두 접근 허가
                         .requestMatchers(HttpMethod.GET, "/api/food/**").permitAll()
                         .requestMatchers("/api/food/result/**").permitAll()
                         .requestMatchers("/api/test/**").permitAll()

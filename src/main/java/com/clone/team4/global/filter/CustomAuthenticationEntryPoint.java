@@ -6,8 +6,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.io.IOException;
 
@@ -27,5 +29,9 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         response.setStatus(401);
 //      response.sendRedirect("/login");
+    }
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public String HttpMessageNotReadableExceptionHandler(){
+        return "핸들러 성공";
     }
 }
