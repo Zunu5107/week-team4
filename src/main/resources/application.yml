@@ -13,7 +13,7 @@ spring:
     include: secret
   data:
     redis:
-      host: localhost
+      host: localhost/1
       port: 6379
       repositories:
         enabled: false

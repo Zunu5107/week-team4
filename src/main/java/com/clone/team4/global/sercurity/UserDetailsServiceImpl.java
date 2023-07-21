@@ -2,7 +2,6 @@ package com.clone.team4.global.sercurity;
 
 
 import com.clone.team4.domain.user.entity.AccountInfo;
-import com.clone.team4.domain.user.entity.QAccountInfo;
 import com.clone.team4.domain.user.entity.User;
 import com.clone.team4.domain.user.entity.UserRoleEnum;
 import com.clone.team4.domain.user.repository.AccountInfoRepository;
@@ -33,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Not Found " + email));
         UserRoleEnum role = queryFactory.select(accountInfo.role).from(accountInfo).where(accountInfo.id.eq(user.getId())).fetchOne();
-        return new UserDetailsImpl(user, role);
+        return new UserDetailsImpl(user, UserRoleEnum.USER);
     }
 
     public UserDetails loadUserByAccountInfo(String nickname) throws UsernameNotFoundException {

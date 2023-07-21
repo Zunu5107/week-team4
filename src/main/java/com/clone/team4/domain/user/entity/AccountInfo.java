@@ -18,6 +18,7 @@ public class AccountInfo {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false, unique = true)
     private String nickname;
 
     private String introduce;
@@ -31,7 +32,7 @@ public class AccountInfo {
     public AccountInfo(User user, String nickname) {
         this.user = user;
         this.nickname = nickname;
-        this.introduce = null;
+        this.introduce = "default";
         this.profileImage = null;
         this.role = UserRoleEnum.USER;
     }
