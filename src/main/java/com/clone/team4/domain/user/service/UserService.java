@@ -8,8 +8,8 @@ import com.clone.team4.domain.user.repository.UserRepository;
 import com.clone.team4.global.dto.CustomStatusResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,11 +17,12 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final AccountInfoRepository accountInfoRepository;
 
     public ResponseEntity<CustomStatusResponseDto> createAccount(SignupRequestDto requestDto) {
 
-        User user = new User(requestDto.getEmail(), requestDto.getPassword());
+        User user = new User(requestDto.getEmail(), passwordEncoder.encode(requestDto.getPassword()));
         AccountInfo accountInfo = new AccountInfo(user, requestDto.getNickname());
 
         userRepository.save(user);
