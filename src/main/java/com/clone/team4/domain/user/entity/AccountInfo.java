@@ -28,8 +28,7 @@ public class AccountInfo {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    public AccountInfo(Long id, User user, String nickname) {
-        this.id = id;
+    public AccountInfo(User user, String nickname) {
         this.user = user;
         this.nickname = nickname;
         this.introduce = null;
