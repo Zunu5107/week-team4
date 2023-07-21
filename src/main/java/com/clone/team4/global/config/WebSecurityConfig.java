@@ -102,6 +102,7 @@ public class WebSecurityConfig { // 이 개 같은거 설명좀 해주실 분 ?
                         .requestMatchers("/api/food/*/choice").permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/v3/**").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 
