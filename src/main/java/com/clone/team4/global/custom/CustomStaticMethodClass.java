@@ -36,7 +36,6 @@ public class CustomStaticMethodClass {
         response.setCharacterEncoding("UTF-8");
         ObjectMapper objectMapper = new ObjectMapper();
         String str = objectMapper.writeValueAsString(errorLoginDto);
-        log.info("translate = " + str );
         response.getWriter().write(str);
     }
 }
