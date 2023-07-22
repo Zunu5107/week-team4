@@ -31,8 +31,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Not Found " + email));
-        UserRoleEnum role = queryFactory.select(accountInfo.role).from(accountInfo).where(accountInfo.id.eq(user.getId())).fetchOne();
-        return new UserDetailsImpl(user, UserRoleEnum.USER);
+        AccountInfo accountInfo = accountInfoRepository.findById(user.getId())
+                .orElseThrow(() -> new UsernameNotFoundException("Not Found " + email));
+        return new UserDetailsImpl(user, accountInfo);
     }
 
     public UserDetails loadUserByAccountInfo(String nickname) throws UsernameNotFoundException {
