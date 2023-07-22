@@ -80,7 +80,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 exceptionHandlerRefresh(res, e);
                 return;
             }
-        } else{
+        }
+        else{
             log.info("AccessTokenDenide");
             res.addHeader("AccessTokenDenide","true");
         }
