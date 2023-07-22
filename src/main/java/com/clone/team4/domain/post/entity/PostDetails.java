@@ -2,10 +2,12 @@ package com.clone.team4.domain.post.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "")
+@Table(name = "post_details")
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostDetails {
 
