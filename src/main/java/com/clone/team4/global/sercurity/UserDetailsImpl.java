@@ -17,10 +17,10 @@ public class UserDetailsImpl implements UserDetails {
     private final AccountInfo accountInfo;
     private final UserRoleEnum role;
 
-    public UserDetailsImpl(User user, AccountInfo accountInfo, UserRoleEnum role) {
+    public UserDetailsImpl(User user, AccountInfo accountInfo) {
         this.user = user;
         this.accountInfo = accountInfo;
-        this.role = role;
+        this.role = accountInfo.getRole();
     }
 
     public UserDetailsImpl(User user, UserRoleEnum role) {
