@@ -111,8 +111,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             String username = userDetailsService.loadUsernameByRedis(uuid);
             if(username == null)
                 exceptionHandler(res, new NullPointerException());
-                setAuthenticationRefresh(res, username);
-
+            setAuthenticationRefresh(res, username);
         }
     }
 
