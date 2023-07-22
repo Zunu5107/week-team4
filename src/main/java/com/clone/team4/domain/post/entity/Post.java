@@ -30,7 +30,12 @@ public class Post extends Timestamped {
     @JoinColumn(name = "accountInfo_id", nullable = false)
     private AccountInfo accountInfo;
 
+    public Post(String category, Long likeCount, AccountInfo accountInfo) {
+        this.category = category;
+        this.likeCount = likeCount;
+        this.accountInfo = accountInfo;
+    }
 
-//    @OneToMany(fetch = FetchType.LAZY)
+    //    @OneToMany(fetch = FetchType.LAZY)
 //    private List<Comment> comments = new ArrayList<>();
 }
