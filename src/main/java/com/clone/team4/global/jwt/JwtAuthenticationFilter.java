@@ -63,7 +63,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         AccountInfo accountInfo = ((UserDetailsImpl) authResult.getPrincipal()).getAccountInfo();
 
         String token = jwtUtil.createToken(accountInfo.getNickname(), accountInfo.getRole());
-        //jwtUtil.addJwtToCookie(token, response);
         jwtUtil.addJwtToHeader(token, ACCESS_HEADER, response);
 
         MakeRefreshToken(response, accountInfo.getNickname());
