@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class  AccountInfo {
+public class AccountInfo {
     @Id
     @Column(name = "user_id")
     private Long id;
