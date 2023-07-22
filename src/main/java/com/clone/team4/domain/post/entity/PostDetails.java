@@ -21,4 +21,11 @@ public class PostDetails {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
+    public PostDetails(Long id, String image, String content, Post post) {
+        this.id = id;
+        this.image = image;
+        this.content = content;
+        this.post = post;
+    }
 }
