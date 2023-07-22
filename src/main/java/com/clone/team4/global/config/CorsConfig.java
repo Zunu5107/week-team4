@@ -17,12 +17,11 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-//        config.addAllowedOriginPattern("http://miniproject03.s3-website.ap-northeast-2.amazonaws.com/");
         System.out.println("Origin = " + Origin);
         config.addAllowedOriginPattern(Origin);
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        config.addExposedHeader("*"); // https://iyk2h.tistory.com/184?category=875351 // 헤더값 보내줄 거 설정.
+        config.addExposedHeader("*");
         source.registerCorsConfiguration("/**",config);
         return new CorsFilter(source);
     }

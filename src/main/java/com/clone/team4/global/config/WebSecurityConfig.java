@@ -1,11 +1,11 @@
 package com.clone.team4.global.config;
 
 
-import com.clone.team4.global.sercurity.UserDetailsServiceImpl;
 import com.clone.team4.global.filter.CustomAuthenticationEntryPoint;
 import com.clone.team4.global.jwt.JwtAuthenticationFilter;
 import com.clone.team4.global.jwt.JwtAuthorizationFilter;
 import com.clone.team4.global.jwt.JwtUtil;
+import com.clone.team4.global.sercurity.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity // Spring Security 지원을 가능하게 함
 @EnableGlobalMethodSecurity(securedEnabled = true)
-public class WebSecurityConfig { // 이 개 같은거 설명좀 해주실 분 ?
+public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
     private final CorsConfig corsConfig;
@@ -77,7 +77,7 @@ public class WebSecurityConfig { // 이 개 같은거 설명좀 해주실 분 ?
 //    public WebSecurityCustomizer webSecurityCustomizer() {
 //        return web -> {
 //            web.ignoring()
-//                    .requestMatchers(new AntPathRequestMatcher("/api/food/**"));
+//                    .requestMatchers(new AntPathRequestMatcher("/api/**"));
 //        };
 //    }
 
@@ -90,6 +90,7 @@ public class WebSecurityConfig { // 이 개 같은거 설명좀 해주실 분 ?
         http.sessionManagement((sessionManagement) ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
+
 
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
