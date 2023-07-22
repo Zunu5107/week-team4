@@ -36,7 +36,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
-        log.info("Debug value = " + Debug);
     }
 
     @Override
@@ -81,7 +80,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 exceptionHandlerRefresh(res, e);
                 return;
             }
-        } else{
+        }
+        else{
             log.info("AccessTokenDenide");
             res.addHeader("AccessTokenDenide","true");
         }

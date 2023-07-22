@@ -1,6 +1,9 @@
 package com.clone.team4.global.jwt;
 
+import com.clone.team4.domain.user.dto.UsernameAndImageResopnseDto;
 import com.clone.team4.domain.user.entity.AccountInfo;
+import com.clone.team4.global.dto.CustomStatusAndMessageAndDataResponseDto;
+import com.clone.team4.global.dto.CustomStatusAndMessageListResponseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.clone.team4.domain.user.dto.LoginRequestDto;
 import com.clone.team4.domain.user.dto.UsernameResponseDto;
@@ -70,7 +73,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         ObjectMapper objectMapper = new ObjectMapper();
-        String str = objectMapper.writeValueAsString(new UsernameResponseDto(accountInfo.getNickname()));
+        UsernameAndImageResopnseDto data = new UsernameAndImageResopnseDto(accountInfo.getNickname(), accountInfo.getProfileImage());
+        CustomStatusAndMessageAndDataResponseDto<UsernameAndImageResopnseDto> responseDto =
+                new CustomStatusAndMessageAndDataResponseDto<>(200,"success", data);
+        String str = objectMapper.writeValueAsString(responseDto);
         response.getWriter().write(str);
     }
 
