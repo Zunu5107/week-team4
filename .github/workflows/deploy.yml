@@ -33,6 +33,16 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        
+    - name: Run chmod to make gradlew executable  
+      run: chmod +x ./gradlew
+      
+    - name: Set Yaml
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: ./src/main/resources/application-secret.yml 
+      env:
+        jasypt.encryptor.password: ${{ secrets.APPLICATION_KEY }} 
 
     # (3) Gradle build (Test 제외)
     - name: Build with Gradle
@@ -40,12 +50,7 @@ jobs:
       with:
         arguments: clean build -x test
         
-    - name: Set Yaml
-      uses: microsoft/variable-substitution@v1
-      with:
-        files: ./src/main/resources/application-secret.yml 
-      env:
-        jasypt.encryptor.password: ${{ secrets.APPLICATION_KEY }} 
+
 
     # (4) AWS 인증 (IAM 사용자 Access Key, Secret Key 활용)
     - name: Configure AWS credentials
