@@ -1,5 +1,6 @@
 package com.clone.team4.domain.post.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.clone.team4.domain.post.dto.PostDetailsResponseDto;
