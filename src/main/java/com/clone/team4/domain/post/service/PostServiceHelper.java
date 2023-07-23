@@ -24,7 +24,7 @@ public class PostServiceHelper {
     private final String[] CATEGORY_WHITELIST = {"취미일상","집사진"};
 
     public void validPostCreateRequest(List<MultipartFile> images, List<PostRequestDto> contentList, Integer imageCount, String category) {
-        if (!isValidImagesCount(images, contentList, imageCount) && isValidCategoryRequest(category)) {
+        if (!isValidImagesCount(images, contentList, imageCount) || !isValidCategoryRequest(category)) {
             throw new IllegalArgumentException("잘못된 입력입니다.");
         }
     }
