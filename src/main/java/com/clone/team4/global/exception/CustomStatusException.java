@@ -3,46 +3,40 @@ package com.clone.team4.global.exception;
 import org.springframework.http.HttpStatus;
 
 public class CustomStatusException extends RuntimeException{
-    HttpStatus status;
+    private HttpStatus status;
 
-    private CustomStatusException(String message, HttpStatus status) {
+    private CustomStatusException(String message) {
         super(message);
-        this.status = status;
     }
 
     public HttpStatus getStatus() {
         return status;
     }
 
-    private CustomStatusException(CustomStatusExceptionBuilder builder) {
-        super(builder.message);
-        this.status = builder.status;
-    }
+
 
     public static CustomStatusExceptionBuilder builder(String message){
         return new CustomStatusExceptionBuilder(message);
     }
 
     public static class CustomStatusExceptionBuilder{
-        String message;
-        HttpStatus status;
+        private CustomStatusException result;
 
         public CustomStatusExceptionBuilder(String message) {
-            this.message = message;
-            this.status = HttpStatus.BAD_REQUEST;
+            this.result = new CustomStatusException(message);
         }
 
         public CustomStatusExceptionBuilder status(int status){
-            this.status = HttpStatus.valueOf(status);
+            this.result.status = HttpStatus.valueOf(status);
             return this;
         }
         public CustomStatusExceptionBuilder status(HttpStatus status){
-            this.status = status;
+            this.result.status = status;
             return this;
         }
 
         public CustomStatusException build(){
-            return new CustomStatusException(this);
+            return this.result;
         }
     }
 }

@@ -5,9 +5,8 @@ import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.domain.user.entity.User;
 import com.clone.team4.domain.user.repository.AccountInfoRepository;
 import com.clone.team4.domain.user.repository.UserRepository;
-import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.dto.CustomStatusResponseDto;
-import com.clone.team4.global.dto.ErrorLoginDto;
+import com.clone.team4.global.exception.CustomStatusException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +23,10 @@ public class UserService {
 
     public ResponseEntity<CustomStatusResponseDto> createAccount(SignupRequestDto requestDto) {
 
+        if(userRepository.findByEmail(requestDto.getEmail()).isPresent())
+            throw CustomStatusException.builder("Same Email").status(HttpStatus.CONFLICT).build();
+        if(accountInfoRepository.findByNickname(requestDto.getNickname()).isPresent())
+            throw CustomStatusException.builder("Same nickname!").status(HttpStatus.CONFLICT).build();
         User user = new User(requestDto.getEmail(), passwordEncoder.encode(requestDto.getPassword()));
         AccountInfo accountInfo = new AccountInfo(user, requestDto.getNickname());
 
