@@ -25,5 +25,5 @@ public abstract class Timestamped {
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime deletedAt;
+    protected LocalDateTime deletedAt;
 }

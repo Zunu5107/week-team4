@@ -65,7 +65,8 @@ public class PostController {
     }
 
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<BaseResponseDto> deletePost() {
-        return null;
+    public ResponseEntity<BaseResponseDto> deletePost(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        BaseResponseDto response = postService.deletePost(postId, userDetails.getAccountInfo());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

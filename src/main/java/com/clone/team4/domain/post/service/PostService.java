@@ -14,11 +14,11 @@ import com.clone.team4.domain.post.dto.PostRequestDto;
 import com.clone.team4.domain.post.dto.PostResponseDto;
 import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.domain.post.entity.PostDetails;
-import com.clone.team4.domain.post.entity.QPostDetails;
 import com.clone.team4.domain.post.image.S3ImageUploader;
 import com.clone.team4.domain.post.repository.PostDetailsRepository;
 import com.clone.team4.domain.post.repository.PostRepository;
 import com.clone.team4.domain.user.entity.AccountInfo;
+import com.clone.team4.domain.user.entity.UserRoleEnum;
 import com.clone.team4.global.dto.BaseResponseDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
@@ -79,7 +79,7 @@ public class PostService {
 
         postServiceHelper.validPostCreateRequest(imageList, contentList, imageCount, category);
         List<String> imageUrls = s3ImageUploader.storeFile(imageList);
-        Post post = new Post(category, accountInfo);
+        Post post = new Post(category, accountInfo, imageCount);
         Post savedPost = postRepository.save(post);
 
         List<PostDetails> postDetailsList = PostDetails.createPostDetailsList(imageUrls, contentList, savedPost,
@@ -110,13 +110,9 @@ public class PostService {
             .where(qPostDetails.post.eq(savedPost))
             .fetch();
 
-        // 삭제 하지말고 덮어쓰기
-        // 원래보다 많으면 추가
-
         s3ImageUploader.deleteFile(savedImages);
 
-        savedPost.updatePost(category);
-        // postDetailsRepository.deleteByPostId(savedPost);
+        savedPost.updatePost(category, imageCount);
 
         List<String> newImageUrls = s3ImageUploader.storeFile(imageList);
 
@@ -125,5 +121,19 @@ public class PostService {
 
         BaseResponseDto<?> response = new BaseResponseDto<>(HttpStatus.OK.toString(), "게시글 수정 성공", null);
         return response;
+    }
+
+    @Transactional
+    public BaseResponseDto deletePost(Long postId, AccountInfo accountInfo){
+        Long postAccountId = jpaQueryFactory.select(post.accountInfo.id)
+            .from(post)
+            .where(post.id.eq(postId).and(post.accountInfo.id.eq(accountInfo.getId())))
+            .fetchFirst();
+        log.info("role = {}", accountInfo.getRole());
+        if (!(postAccountId != null || accountInfo.getRole().equals(UserRoleEnum.ADMIN)))
+            throw new IllegalArgumentException("권한이 없습니다.");
+
+        jpaQueryFactory.update(post).set(post.deletedAt, LocalDateTime.now()).where(post.id.eq(postId), post.accountInfo.id.eq(accountInfo.getId())).execute();
+        return new BaseResponseDto(HttpStatus.OK.toString(), "게시글 삭제 성공",null);
     }
 }

@@ -40,13 +40,15 @@ public class Post extends Timestamped {
         this.accountInfo = accountInfo;
     }
 
-    public Post(String category, AccountInfo accountInfo){
+    public Post(String category, AccountInfo accountInfo, int detailsCount){
+        this.detailsCount = detailsCount;
         this.category = category;
         this.likeCount = 0L;
         this.accountInfo = accountInfo;
     }
 
-    public void updatePost(String category) {
+    public void updatePost(String category, int detailsCount) {
+        this.detailsCount = detailsCount;
         this.category = category;
         this.modifiedAt = LocalDateTime.now();
     }
