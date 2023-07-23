@@ -1,11 +1,22 @@
 package com.clone.team4.domain.post.entity;
 
-import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.clone.team4.domain.post.dto.PostRequestDto;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "")
+@Table(name = "post_details")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostDetails {
 
@@ -27,5 +38,16 @@ public class PostDetails {
         this.image = image;
         this.content = content;
         this.post = post;
+    }
+
+    public static List<PostDetails> createPostDetailsList(List<String> imageUrls, List<PostRequestDto> contentList, Post post, int maxImageCount){
+        Long postId = post.getId();
+        List<PostDetails> postDetails = new ArrayList<>();
+
+        for (int i = 0; i < imageUrls.size(); i++) {
+            Long postDetailsId = postId * maxImageCount + i;
+            postDetails.add(new PostDetails(postDetailsId, imageUrls.get(i), contentList.get(i).getContent(), post));
+        }
+        return postDetails;
     }
 }
