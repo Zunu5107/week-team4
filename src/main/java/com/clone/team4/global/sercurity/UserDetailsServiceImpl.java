@@ -3,7 +3,6 @@ package com.clone.team4.global.sercurity;
 
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.domain.user.entity.User;
-import com.clone.team4.domain.user.entity.UserRoleEnum;
 import com.clone.team4.domain.user.repository.AccountInfoRepository;
 import com.clone.team4.domain.user.repository.UserRepository;
 import com.clone.team4.global.redis.RedisService;
@@ -14,8 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import static com.clone.team4.domain.user.entity.QAccountInfo.accountInfo;
 
 @Service
 @RequiredArgsConstructor
@@ -31,14 +28,17 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Not Found " + email));
-        UserRoleEnum role = queryFactory.select(accountInfo.role).from(accountInfo).where(accountInfo.id.eq(user.getId())).fetchOne();
-        return new UserDetailsImpl(user, UserRoleEnum.USER);
+        AccountInfo accountInfo = accountInfoRepository.findById(user.getId())
+                .orElseThrow(() -> new UsernameNotFoundException("Not Found " + email));
+        return new UserDetailsImpl(user, accountInfo);
     }
 
     public UserDetails loadUserByAccountInfo(String nickname) throws UsernameNotFoundException {
         AccountInfo accountInfo = accountInfoRepository.findByNickname(nickname)
                 .orElseThrow(() -> new UsernameNotFoundException("Not Found " + nickname));
-        return new UserDetailsImpl(accountInfo);
+        User user = userRepository.findById(accountInfo.getId())
+                .orElseThrow(() -> new UsernameNotFoundException("Not Found " + nickname));
+        return new UserDetailsImpl(user, accountInfo);
     }
 
     public String loadUsernameByRedis(String uuid){

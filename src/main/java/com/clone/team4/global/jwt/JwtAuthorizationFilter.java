@@ -2,9 +2,9 @@ package com.clone.team4.global.jwt;
 
 
 import com.clone.team4.domain.user.entity.AccountInfo;
+import com.clone.team4.global.dto.ErrorLoginMessageDto;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
 import com.clone.team4.global.sercurity.UserDetailsServiceImpl;
-import com.clone.team4.global.dto.ErrorLoginMessageDto;
 import io.jsonwebtoken.*;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -36,7 +36,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
-        log.info("Debug value = " + Debug);
     }
 
     @Override
@@ -81,7 +80,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 exceptionHandlerRefresh(res, e);
                 return;
             }
-        } else{
+        }
+        else{
             log.info("AccessTokenDenide");
             res.addHeader("AccessTokenDenide","true");
         }
@@ -112,8 +112,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             String username = userDetailsService.loadUsernameByRedis(uuid);
             if(username == null)
                 exceptionHandler(res, new NullPointerException());
-                setAuthenticationRefresh(res, username);
-
+            setAuthenticationRefresh(res, username);
         }
     }
 
