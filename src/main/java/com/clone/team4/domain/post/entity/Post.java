@@ -1,14 +1,14 @@
 package com.clone.team4.domain.post.entity;
 
-import java.time.LocalDateTime;
-
-import org.hibernate.annotations.ColumnDefault;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "post")

@@ -7,9 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -20,6 +18,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 public class UserController {
 
     private final UserService userService;
+
 
     @PostMapping("/signup")
     public ResponseEntity<CustomStatusResponseDto> createAccount(@RequestBody @Valid SignupRequestDto requestDto){
