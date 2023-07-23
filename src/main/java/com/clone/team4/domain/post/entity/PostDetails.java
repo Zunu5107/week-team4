@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "post_details")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostDetails {
