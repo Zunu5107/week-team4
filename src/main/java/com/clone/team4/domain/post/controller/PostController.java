@@ -52,8 +52,16 @@ public class PostController {
     }
 
     @PutMapping("/posts/{postId}")
-    public ResponseEntity<BaseResponseDto> updatePost() {
-        return null;
+    public ResponseEntity<BaseResponseDto> updatePost(@PathVariable Long postId,
+        @RequestPart("category") String category,
+        @RequestPart(value = "image") List<MultipartFile> imageList,
+        @RequestPart("content") List<PostRequestDto> contentList,
+        @RequestParam("imageCount") Integer imageCount,
+        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        BaseResponseDto<?> response = postService.updatePost(postId, category, imageList, contentList,
+            imageCount, userDetails.getAccountInfo());
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/posts/{postId}")

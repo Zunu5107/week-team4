@@ -1,5 +1,7 @@
 package com.clone.team4.domain.post.entity;
 
+import java.time.LocalDateTime;
+
 import org.hibernate.annotations.ColumnDefault;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.global.entity.Timestamped;
@@ -30,6 +32,8 @@ public class Post extends Timestamped {
     @JoinColumn(name = "accountInfo_id", nullable = false)
     private AccountInfo accountInfo;
 
+    private int detailsCount;
+
     public Post(String category, Long likeCount, AccountInfo accountInfo) {
         this.category = category;
         this.likeCount = likeCount;
@@ -40,6 +44,11 @@ public class Post extends Timestamped {
         this.category = category;
         this.likeCount = 0L;
         this.accountInfo = accountInfo;
+    }
+
+    public void updatePost(String category) {
+        this.category = category;
+        this.modifiedAt = LocalDateTime.now();
     }
 
     //    @OneToMany(fetch = FetchType.LAZY)

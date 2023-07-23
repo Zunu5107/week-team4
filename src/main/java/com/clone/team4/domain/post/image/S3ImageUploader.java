@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -56,6 +57,18 @@ public class S3ImageUploader {
             imageUrls.add(amazonS3.getUrl(bucket, storeFileName).toString());
         }
         return imageUrls;
+    }
+
+    @Async
+    public void deleteFile(List<String> imageList) {
+        // 이미지 삭제에 실패해도 게시글 수정 작업은 실패하면 안된다.
+        for (String image : imageList) {
+            try{
+                amazonS3.deleteObject(bucket, image);
+            } catch (RuntimeException e) {
+                log.error("삭제 실패 파일명 = {}", image, e);
+            }
+        }
     }
 
     private ObjectMetadata createObjectMetadata(MultipartFile multipartFile) {

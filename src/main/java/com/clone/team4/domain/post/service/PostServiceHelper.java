@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.clone.team4.domain.post.dto.PostRequestDto;
+import com.clone.team4.domain.post.entity.Post;
+import com.clone.team4.domain.user.entity.AccountInfo;
+import com.clone.team4.domain.user.entity.UserRoleEnum;
 
 import lombok.Getter;
 
@@ -35,5 +38,10 @@ public class PostServiceHelper {
 
     private boolean isValidCategoryRequest(String category) {
         return Arrays.asList(CATEGORY_WHITELIST).contains(category);
+    }
+
+    public boolean hasRole(AccountInfo accountInfo, Post post) {
+        return post.getAccountInfo().getId().equals(accountInfo.getId()) ||
+            accountInfo.getRole().equals(UserRoleEnum.ADMIN);
     }
 }

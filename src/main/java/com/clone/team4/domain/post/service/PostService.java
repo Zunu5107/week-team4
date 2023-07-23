@@ -3,22 +3,24 @@ package com.clone.team4.domain.post.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.clone.team4.domain.post.dto.PostDetailsResponseDto;
-import com.clone.team4.domain.post.dto.PostInfoResponseDto;
-import com.clone.team4.domain.post.dto.PostResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.clone.team4.domain.post.dto.PostDetailsResponseDto;
+import com.clone.team4.domain.post.dto.PostInfoResponseDto;
 import com.clone.team4.domain.post.dto.PostRequestDto;
+import com.clone.team4.domain.post.dto.PostResponseDto;
 import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.domain.post.entity.PostDetails;
+import com.clone.team4.domain.post.entity.QPostDetails;
 import com.clone.team4.domain.post.image.S3ImageUploader;
 import com.clone.team4.domain.post.repository.PostDetailsRepository;
 import com.clone.team4.domain.post.repository.PostRepository;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.global.dto.BaseResponseDto;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,8 @@ public class PostService {
     private final PostDetailsRepository postDetailsRepository;
     private final S3ImageUploader s3ImageUploader;
     private final PostServiceHelper postServiceHelper;
+
+    private final JPAQueryFactory jpaQueryFactory;
 
     public BaseResponseDto<?> getPosts() {
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
@@ -83,6 +87,43 @@ public class PostService {
         postDetailsRepository.saveAll(postDetailsList);
 
         BaseResponseDto<?> response = new BaseResponseDto<>(HttpStatus.CREATED.toString(), "게시글 작성 성공", null);
+        return response;
+    }
+
+    @Transactional
+    public BaseResponseDto<?> updatePost(Long postId, String category, List<MultipartFile> imageList, List<PostRequestDto> contentList,
+        Integer imageCount, AccountInfo accountInfo) {
+
+        postServiceHelper.validPostCreateRequest(imageList,contentList,imageCount, category);
+
+        Post savedPost = postRepository.findById(postId)
+            .orElseThrow(() -> new IllegalArgumentException("해당 포스트가 없습니다."));
+
+        if (!postServiceHelper.hasRole(accountInfo,savedPost)){
+            throw new IllegalArgumentException("권한이 없습니다.");
+        }
+
+        QPostDetails qPostDetails = QPostDetails.postDetails;
+        List<String> savedImages = jpaQueryFactory
+            .select(qPostDetails.image)
+            .from(qPostDetails)
+            .where(qPostDetails.post.eq(savedPost))
+            .fetch();
+
+        // 삭제 하지말고 덮어쓰기
+        // 원래보다 많으면 추가
+
+        s3ImageUploader.deleteFile(savedImages);
+
+        savedPost.updatePost(category);
+        // postDetailsRepository.deleteByPostId(savedPost);
+
+        List<String> newImageUrls = s3ImageUploader.storeFile(imageList);
+
+        List<PostDetails> newPostDetails = PostDetails.createPostDetailsList(newImageUrls, contentList, savedPost, postServiceHelper.getMAX_IMAGE_COUNT());
+        postDetailsRepository.saveAll(newPostDetails);
+
+        BaseResponseDto<?> response = new BaseResponseDto<>(HttpStatus.OK.toString(), "게시글 수정 성공", null);
         return response;
     }
 }
