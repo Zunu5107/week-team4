@@ -1,27 +1,18 @@
 package com.clone.team4.domain.post.controller;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.clone.team4.domain.post.dto.PostRequestDto;
 import com.clone.team4.domain.post.service.PostService;
 import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -33,24 +24,30 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<BaseResponseDto> getPosts(){
-        log.info("getPosts");
-        return ResponseEntity.status(HttpStatus.CREATED).body(new BaseResponseDto("201","success",null));
+        BaseResponseDto<?> response = postService.getPosts();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-//    @GetMapping("/posts")
+
+    //    @GetMapping("/posts")
 //    public ResponseEntity<BaseResponseDto> getPostsByCategory(@RequestParam String category){
 //        log.info("with category");
 //        return null;
 //    }
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<BaseResponseDto> getPostById(@PathVariable Long postId) {
+        BaseResponseDto<?> response = postService.getPostById(postId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
     @PostMapping(value = "/posts")
     public ResponseEntity<BaseResponseDto> createPost(@RequestPart("category") String category,
-        @RequestPart("image") List<MultipartFile> imageList,
-        @RequestPart("content") List<PostRequestDto> contentList,
-        @RequestParam("imageCount") Integer imageCount,
-        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                                      @RequestPart("image") List<MultipartFile> imageList,
+                                                      @RequestPart("content") List<PostRequestDto> contentList,
+                                                      @RequestParam("imageCount") Integer imageCount,
+                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         BaseResponseDto<?> response = postService.createPost(category, imageList, contentList, imageCount,
-            userDetails.getAccountInfo());
+                userDetails.getAccountInfo());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

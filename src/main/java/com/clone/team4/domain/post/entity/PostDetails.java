@@ -5,6 +5,7 @@ import java.util.List;
 import com.clone.team4.domain.post.dto.PostRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
