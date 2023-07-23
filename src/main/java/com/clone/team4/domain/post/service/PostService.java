@@ -1,5 +1,6 @@
 package com.clone.team4.domain.post.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.clone.team4.domain.post.entity.QPost.post;
+import static com.clone.team4.domain.post.entity.QPostDetails.postDetails;
 
 @Slf4j
 @Service
@@ -82,8 +86,7 @@ public class PostService {
         Post post = new Post(category, accountInfo, imageCount);
         Post savedPost = postRepository.save(post);
 
-        List<PostDetails> postDetailsList = PostDetails.createPostDetailsList(imageUrls, contentList, savedPost,
-            postServiceHelper.getMAX_IMAGE_COUNT());
+        List<PostDetails> postDetailsList = PostDetails.createPostDetailsList(imageUrls, contentList, savedPost, postServiceHelper.getMAX_IMAGE_COUNT());
         postDetailsRepository.saveAll(postDetailsList);
 
         BaseResponseDto<?> response = new BaseResponseDto<>(HttpStatus.CREATED.toString(), "게시글 작성 성공", null);
@@ -103,11 +106,10 @@ public class PostService {
             throw new IllegalArgumentException("권한이 없습니다.");
         }
 
-        QPostDetails qPostDetails = QPostDetails.postDetails;
         List<String> savedImages = jpaQueryFactory
-            .select(qPostDetails.image)
-            .from(qPostDetails)
-            .where(qPostDetails.post.eq(savedPost))
+            .select(postDetails.image)
+            .from(postDetails)
+            .where(postDetails.post.id.eq(savedPost.getId()))
             .fetch();
 
         s3ImageUploader.deleteFile(savedImages);
@@ -129,7 +131,7 @@ public class PostService {
             .from(post)
             .where(post.id.eq(postId).and(post.accountInfo.id.eq(accountInfo.getId())))
             .fetchFirst();
-        log.info("role = {}", accountInfo.getRole());
+
         if (!(postAccountId != null || accountInfo.getRole().equals(UserRoleEnum.ADMIN)))
             throw new IllegalArgumentException("권한이 없습니다.");
 
