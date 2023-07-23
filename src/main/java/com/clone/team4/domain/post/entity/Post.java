@@ -1,12 +1,12 @@
 package com.clone.team4.domain.post.entity;
 
+import org.hibernate.annotations.ColumnDefault;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "post")
@@ -33,6 +33,12 @@ public class Post extends Timestamped {
     public Post(String category, Long likeCount, AccountInfo accountInfo) {
         this.category = category;
         this.likeCount = likeCount;
+        this.accountInfo = accountInfo;
+    }
+
+    public Post(String category, AccountInfo accountInfo){
+        this.category = category;
+        this.likeCount = 0L;
         this.accountInfo = accountInfo;
     }
 

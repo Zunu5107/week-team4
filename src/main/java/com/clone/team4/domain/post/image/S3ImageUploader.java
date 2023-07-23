@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,28 +21,30 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @Component
-public class ImageStore {
-
-    private static final Tika tika = new Tika();
+public class S3ImageUploader {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     private final AmazonS3 amazonS3;
 
-    public List<String> storeFile(List<MultipartFile> multiPartFileList) {
+    private final ImageValidator imageValidator;
 
+    public List<String> storeFile(List<MultipartFile> multiPartFileList) {
         List<String> imageUrls = new ArrayList<>();
+
         for (MultipartFile multipartFile : multiPartFileList) {
-            validateImageFile(multipartFile);
+            imageValidator.validateImageFile(multipartFile);
 
             multipartFile.getOriginalFilename();
 
+            // 기존의 파일명
             String originalFileName = multipartFile.getOriginalFilename();
+
+            // 저장될 파일명 (UUID)
             String storeFileName = createStoreFileName(originalFileName);
 
             ObjectMetadata objectMetadata = createObjectMetadata(multipartFile);
-
             try {
                 InputStream inputStream = multipartFile.getInputStream();
                 amazonS3.putObject(new PutObjectRequest(bucket, storeFileName, inputStream, objectMetadata)
@@ -51,13 +52,13 @@ public class ImageStore {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
             imageUrls.add(amazonS3.getUrl(bucket, storeFileName).toString());
         }
-
         return imageUrls;
     }
 
-    private ObjectMetadata createObjectMetadata(MultipartFile multipartFile){
+    private ObjectMetadata createObjectMetadata(MultipartFile multipartFile) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());
         objectMetadata.setContentLength(multipartFile.getSize());
@@ -70,30 +71,10 @@ public class ImageStore {
         return uuid + "." + ext;
     }
 
+    // 파일명의 확장자 파싱
     private String extractExt(String originalFileName) {
         int pos = originalFileName.lastIndexOf(".");
         String ext = originalFileName.substring(pos + 1);
         return ext;
-    }
-
-    private void validateImageFile(MultipartFile multipartFile) {
-        if (multipartFile.isEmpty()) {
-            throw new IllegalArgumentException("잘못된 요청입니다.");
-        }
-        if (!isImageFile(multipartFile)) {
-            throw new IllegalArgumentException("이미지 파일이 아닙니다.");
-        }
-    }
-
-    private boolean isImageFile(MultipartFile multipartFile) {
-        try {
-            String mimeType = tika.detect(multipartFile.getInputStream());
-            if (!mimeType.startsWith("image")) {
-                return false;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("이미지 저장에 실패하였습니다.", e);
-        }
-        return true;
     }
 }

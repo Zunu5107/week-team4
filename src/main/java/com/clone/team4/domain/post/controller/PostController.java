@@ -46,14 +46,9 @@ public class PostController {
                                                       @RequestParam("imageCount") Integer imageCount,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        log.info("createPost Controller Running ={}", imageList.get(1).getOriginalFilename());
-        log.info("category = {}", category);
-        log.info("content.size() = {}", contentList.size());
-        log.info("imageTotalCount = {}", imageCount);
         BaseResponseDto<?> response = postService.createPost(category, imageList, contentList, imageCount,
                 userDetails.getAccountInfo());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
     }
 
     @PutMapping("/posts/{postId}")
