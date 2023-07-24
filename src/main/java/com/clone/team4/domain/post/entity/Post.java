@@ -53,6 +53,11 @@ public class Post extends Timestamped {
         this.modifiedAt = LocalDateTime.now();
     }
 
+    public void updateLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
+    }
+
+
     //    @OneToMany(fetch = FetchType.LAZY)
 //    private List<Comment> comments = new ArrayList<>();
 }
