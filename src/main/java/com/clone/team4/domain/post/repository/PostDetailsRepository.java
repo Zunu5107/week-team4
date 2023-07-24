@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PostDetailsRepository extends JpaRepository<PostDetails,Long> {
-    List<PostDetails> findTopByPostIdOrderByIdDesc(Long postId);
-
+public interface PostDetailsRepository extends JpaRepository<PostDetails,Long>, QPostDetailsRepository {
     List<PostDetails> findAllByPostId(Long postId);
 
 }
