@@ -29,7 +29,7 @@ public class Post extends Timestamped {
     private Long likeCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountInfo_id", nullable = false)
+    @JoinColumn(name = "account_info_id", nullable = false)
     private AccountInfo accountInfo;
 
     private int detailsCount;
