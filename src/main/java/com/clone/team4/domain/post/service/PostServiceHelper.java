@@ -42,4 +42,8 @@ public class PostServiceHelper {
         return post.getAccountInfo().getId().equals(accountInfo.getId()) ||
             accountInfo.getRole().equals(UserRoleEnum.ADMIN);
     }
+
+    public boolean hasRole(AccountInfo accountInfo, Long postAccountId) {
+        return postAccountId != null || accountInfo.getRole().equals(UserRoleEnum.ADMIN);
+    }
 }

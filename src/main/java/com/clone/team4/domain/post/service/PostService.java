@@ -1,31 +1,33 @@
 package com.clone.team4.domain.post.service;
 
+import static com.clone.team4.domain.post.entity.QPost.*;
+import static com.clone.team4.domain.post.entity.QPostDetails.*;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.clone.team4.domain.post.dto.PostDetailsResponseDto;
 import com.clone.team4.domain.post.dto.PostInfoResponseDto;
 import com.clone.team4.domain.post.dto.PostRequestDto;
 import com.clone.team4.domain.post.dto.PostResponseDto;
 import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.domain.post.entity.PostDetails;
+import com.clone.team4.domain.post.image.ImageFolderEnum;
 import com.clone.team4.domain.post.image.S3ImageUploader;
 import com.clone.team4.domain.post.repository.PostDetailsRepository;
 import com.clone.team4.domain.post.repository.PostRepository;
 import com.clone.team4.domain.user.entity.AccountInfo;
-import com.clone.team4.domain.user.entity.UserRoleEnum;
 import com.clone.team4.global.dto.BaseResponseDto;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.clone.team4.domain.post.entity.QPost.post;
-import static com.clone.team4.domain.post.entity.QPostDetails.postDetails;
 
 @Slf4j
 @Service
@@ -80,7 +82,7 @@ public class PostService {
         List<PostRequestDto> contentList, Integer imageCount, AccountInfo accountInfo) {
 
         postServiceHelper.validPostCreateRequest(imageList, contentList, imageCount, category);
-        List<String> imageUrls = s3ImageUploader.storeFile(imageList);
+        List<String> imageUrls = s3ImageUploader.storeImages(imageList,ImageFolderEnum.POST);
         Post post = new Post(category, accountInfo, imageCount);
         Post savedPost = postRepository.save(post);
 
@@ -110,11 +112,11 @@ public class PostService {
             .where(postDetails.post.id.eq(savedPost.getId()))
             .fetch();
 
-        s3ImageUploader.deleteFile(savedImages);
+        s3ImageUploader.deletePostImages(savedImages);
 
         savedPost.updatePost(category, imageCount);
 
-        List<String> newImageUrls = s3ImageUploader.storeFile(imageList);
+        List<String> newImageUrls = s3ImageUploader.storeImages(imageList, ImageFolderEnum.POST);
 
         List<PostDetails> newPostDetails = PostDetails.createPostDetailsList(newImageUrls, contentList, savedPost, postServiceHelper.getMAX_IMAGE_COUNT());
         postDetailsRepository.saveAll(newPostDetails);
@@ -130,7 +132,7 @@ public class PostService {
             .where(post.id.eq(postId).and(post.accountInfo.id.eq(accountInfo.getId())))
             .fetchFirst();
 
-        if (!(postAccountId != null || accountInfo.getRole().equals(UserRoleEnum.ADMIN)))
+        if (!postServiceHelper.hasRole(accountInfo, postAccountId))
             throw new IllegalArgumentException("권한이 없습니다.");
 
         jpaQueryFactory.update(post).set(post.deletedAt, LocalDateTime.now()).where(post.id.eq(postId), post.accountInfo.id.eq(accountInfo.getId())).execute();
