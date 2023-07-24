@@ -3,7 +3,6 @@ package com.clone.team4.global.sercurity;
 
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.domain.user.entity.User;
-import com.clone.team4.domain.user.entity.UserRoleEnum;
 import com.clone.team4.domain.user.repository.AccountInfoRepository;
 import com.clone.team4.domain.user.repository.UserRepository;
 import com.clone.team4.global.redis.RedisService;
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import static com.clone.team4.domain.user.entity.QAccountInfo.accountInfo;
 
 @Service
 @RequiredArgsConstructor

@@ -17,7 +17,7 @@ public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED")
-    private Long id;
+    private Long postId;
 
     @Column(name = "category", nullable = false)
     private String category;
@@ -29,6 +29,7 @@ public class Post extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accountInfo_id", nullable = false)
     private AccountInfo accountInfo;
+
 
 
 //    @OneToMany(fetch = FetchType.LAZY)
