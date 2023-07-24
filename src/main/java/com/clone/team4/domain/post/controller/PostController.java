@@ -1,5 +1,7 @@
 package com.clone.team4.domain.post.controller;
 
+import com.clone.team4.domain.post.dto.PageDto;
+import com.clone.team4.domain.post.dto.PageParam;
 import com.clone.team4.domain.post.dto.PostRequestDto;
 import com.clone.team4.domain.post.service.PostService;
 import com.clone.team4.global.dto.BaseResponseDto;
@@ -23,16 +25,9 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/posts")
-    public ResponseEntity<BaseResponseDto> getPosts(){
-        BaseResponseDto<?> response = postService.getPosts();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+    public ResponseEntity<PageDto> getPostsByCategory(@ModelAttribute PageParam pageParam){
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getPosts(pageParam));
     }
-
-    //    @GetMapping("/posts")
-//    public ResponseEntity<BaseResponseDto> getPostsByCategory(@RequestParam String category){
-//        log.info("with category");
-//        return null;
-//    }
     @GetMapping("/posts/{postId}")
     public ResponseEntity<BaseResponseDto> getPostById(@PathVariable Long postId) {
         BaseResponseDto<?> response = postService.getPostById(postId);
