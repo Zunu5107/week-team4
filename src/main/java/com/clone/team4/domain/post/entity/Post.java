@@ -53,8 +53,12 @@ public class Post extends Timestamped {
         this.modifiedAt = LocalDateTime.now();
     }
 
-    public void updateLikeCount(Long likeCount) {
-        this.likeCount = likeCount;
+    public void increaseLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount -= 1;
     }
 
 
