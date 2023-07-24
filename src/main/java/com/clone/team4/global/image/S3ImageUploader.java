@@ -1,4 +1,4 @@
-package com.clone.team4.domain.post.image;
+package com.clone.team4.global.image;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;

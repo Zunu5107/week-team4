@@ -4,23 +4,22 @@ import static com.clone.team4.domain.post.entity.QPost.*;
 import static com.clone.team4.domain.post.entity.QPostDetails.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+import com.amazonaws.util.StringUtils;
+import com.clone.team4.domain.post.dto.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.clone.team4.domain.post.dto.PostDetailsResponseDto;
-import com.clone.team4.domain.post.dto.PostInfoResponseDto;
-import com.clone.team4.domain.post.dto.PostRequestDto;
-import com.clone.team4.domain.post.dto.PostResponseDto;
-
 import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.domain.post.entity.PostDetails;
-import com.clone.team4.domain.post.image.ImageFolderEnum;
-import com.clone.team4.domain.post.image.S3ImageUploader;
+import com.clone.team4.global.image.ImageFolderEnum;
+import com.clone.team4.global.image.S3ImageUploader;
 import com.clone.team4.domain.post.repository.PostDetailsRepository;
 import com.clone.team4.domain.post.repository.PostRepository;
 import com.clone.team4.domain.user.entity.AccountInfo;

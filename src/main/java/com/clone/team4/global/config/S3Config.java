@@ -1,4 +1,4 @@
-package com.clone.team4.domain.post.image.config;
+package com.clone.team4.global.config;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

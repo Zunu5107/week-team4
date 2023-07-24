@@ -1,4 +1,4 @@
-package com.clone.team4.domain.post.image;
+package com.clone.team4.global.image;
 
 public enum ImageFolderEnum {
 
