@@ -34,6 +34,11 @@ public class PostServiceHelper {
             (imageListSize > 0 && imageListSize <= MAX_IMAGE_COUNT) && (contentListSize > 0 && contentListSize <= MAX_IMAGE_COUNT);
     }
 
+    public void validPostFindRequest(String category) {
+        if(!isValidCategoryRequest(category))
+            throw new IllegalArgumentException("잘못된 입력입니다.");
+    }
+
     private boolean isValidCategoryRequest(String category) {
         return Arrays.asList(CATEGORY_WHITELIST).contains(category);
     }
@@ -41,5 +46,9 @@ public class PostServiceHelper {
     public boolean hasRole(AccountInfo accountInfo, Post post) {
         return post.getAccountInfo().getId().equals(accountInfo.getId()) ||
             accountInfo.getRole().equals(UserRoleEnum.ADMIN);
+    }
+
+    public boolean hasRole(AccountInfo accountInfo, Long postAccountId) {
+        return postAccountId != null || accountInfo.getRole().equals(UserRoleEnum.ADMIN);
     }
 }

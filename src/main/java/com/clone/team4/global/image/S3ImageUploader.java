@@ -1,4 +1,4 @@
-package com.clone.team4.domain.post.image;
+package com.clone.team4.global.image;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,19 +31,18 @@ public class S3ImageUploader {
 
     private final ImageValidator imageValidator;
 
-    public List<String> storeFile(List<MultipartFile> multiPartFileList) {
+    public List<String> storeImages(List<MultipartFile> multiPartFileList, ImageFolderEnum imageFolder) {
         List<String> imageUrls = new ArrayList<>();
 
         for (MultipartFile multipartFile : multiPartFileList) {
-            imageValidator.validateImageFile(multipartFile);
 
-            multipartFile.getOriginalFilename();
+            imageValidator.validateImageFile(multipartFile);
 
             // 기존의 파일명
             String originalFileName = multipartFile.getOriginalFilename();
 
-            // 저장될 파일명 (UUID)
-            String storeFileName = createStoreFileName(originalFileName);
+            // 저장될 파일명
+            String storeFileName = createStoreFileName(originalFileName, imageFolder.getFolderName());
 
             ObjectMetadata objectMetadata = createObjectMetadata(multipartFile);
             try {
@@ -58,7 +59,7 @@ public class S3ImageUploader {
     }
 
     @Async
-    public void deleteFile(List<String> imageList) {
+    public void deletePostImages(List<String> imageList) {
         // 이미지 삭제에 실패해도 게시글 수정 작업은 실패하면 안된다.
         for (String image : imageList) {
             try{
@@ -76,10 +77,13 @@ public class S3ImageUploader {
         return objectMetadata;
     }
 
-    private String createStoreFileName(String originalFileName) {
+    private String createStoreFileName(String originalFileName, String folderName) {
         String ext = extractExt(originalFileName);
+        String fileName = extractFileName(originalFileName);
+        String nowTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE);
         String uuid = UUID.randomUUID().toString();
-        return uuid + "." + ext;
+        log.info("fileName = {} ", fileName);
+        return folderName + "/" + nowTime + fileName + uuid + "." + ext;
     }
 
     // 파일명의 확장자 파싱
@@ -87,5 +91,11 @@ public class S3ImageUploader {
         int pos = originalFileName.lastIndexOf(".");
         String ext = originalFileName.substring(pos + 1);
         return ext;
+    }
+
+    private String extractFileName(String originalFileName) {
+        int pos = originalFileName.lastIndexOf(".");
+        String fileName = originalFileName.substring(0,pos);
+        return fileName;
     }
 }

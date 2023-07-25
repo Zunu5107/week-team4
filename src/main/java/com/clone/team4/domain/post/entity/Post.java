@@ -29,7 +29,7 @@ public class Post extends Timestamped {
     private Long likeCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountInfo_id", nullable = false)
+    @JoinColumn(name = "account_info_id", nullable = false)
     private AccountInfo accountInfo;
 
     private int detailsCount;
@@ -52,6 +52,15 @@ public class Post extends Timestamped {
         this.category = category;
         this.modifiedAt = LocalDateTime.now();
     }
+
+    public void increaseLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount -= 1;
+    }
+
 
     //    @OneToMany(fetch = FetchType.LAZY)
 //    private List<Comment> comments = new ArrayList<>();
