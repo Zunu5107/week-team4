@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.clone.team4.domain.like.service.LikeService;
+import com.clone.team4.domain.post.exception.handler.PostExceptionHandler;
 import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
 
@@ -17,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @RestController
-public class LikeController {
+public class LikeController implements PostExceptionHandler {
 
     private final LikeService likeService;
 
