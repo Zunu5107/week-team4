@@ -1,5 +1,7 @@
 package com.clone.team4.domain.user.service;
 
+import com.clone.team4.domain.user.dao.AccountContentDao;
+import com.clone.team4.domain.user.dto.AccountInfoResponseDto;
 import com.clone.team4.domain.user.dto.SignupRequestDto;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.domain.user.entity.User;
@@ -9,12 +11,16 @@ import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.dto.CustomMessageResponseDto;
 import com.clone.team4.global.dto.CustomStatusResponseDto;
 import com.clone.team4.global.exception.CustomStatusException;
+import com.clone.team4.global.image.ImageFolderEnum;
+import com.clone.team4.global.image.S3ImageUploader;
+import com.clone.team4.global.sercurity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -24,7 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccountInfoRepository accountInfoRepository;
-//    private final RestTemplate restTemplate = builder.build();
+    private final S3ImageUploader imageUploader;
 
     public ResponseEntity createAccount(SignupRequestDto requestDto) {
         log.info("in create account");
@@ -50,6 +56,15 @@ public class UserService {
         accountInfoRepository.save(accountInfo);
 
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(new CustomStatusResponseDto(true));
+    }
+
+    public BaseResponseDto updateAccount(MultipartFile image, String nickname, String introduce, UserDetailsImpl userDetails) {
+        imageUploader.deletePostImage(userDetails.getAccountInfo().getProfileImage());
+        String profileImage = imageUploader.storeImage(image, ImageFolderEnum.PROFILE);
+        AccountContentDao setAccount = new AccountContentDao(introduce, profileImage, nickname);
+        accountInfoRepository.updateAccountInfoContent(userDetails.getUser().getId(), setAccount);
+
+        return BaseResponseDto.builder().status(200).msg("success").data(new AccountInfoResponseDto(setAccount)).build();
     }
 }
 

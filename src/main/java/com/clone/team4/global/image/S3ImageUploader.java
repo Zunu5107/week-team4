@@ -48,7 +48,7 @@ public class S3ImageUploader {
             try {
                 InputStream inputStream = multipartFile.getInputStream();
                 amazonS3.putObject(new PutObjectRequest(bucket, storeFileName, inputStream, objectMetadata)
-                    .withCannedAcl(CannedAccessControlList.PublicRead));
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -58,15 +58,47 @@ public class S3ImageUploader {
         return imageUrls;
     }
 
+    public String storeImage(MultipartFile multiPartFile, ImageFolderEnum imageFolder) {
+
+        imageValidator.validateImageFile(multiPartFile);
+
+        // 기존의 파일명
+        String originalFileName = multiPartFile.getOriginalFilename();
+
+        // 저장될 파일명
+        String storeFileName = createStoreFileName(originalFileName, imageFolder.getFolderName());
+
+        ObjectMetadata objectMetadata = createObjectMetadata(multiPartFile);
+        try {
+            InputStream inputStream = multiPartFile.getInputStream();
+            amazonS3.putObject(new PutObjectRequest(bucket, storeFileName, inputStream, objectMetadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return amazonS3.getUrl(bucket, storeFileName).toString();
+
+    }
+
     @Async
     public void deletePostImages(List<String> imageList) {
         // 이미지 삭제에 실패해도 게시글 수정 작업은 실패하면 안된다.
         for (String image : imageList) {
-            try{
+            try {
                 amazonS3.deleteObject(bucket, image);
             } catch (RuntimeException e) {
                 log.error("삭제 실패 파일명 = {}", image, e);
             }
+        }
+    }
+
+    @Async
+    public void deletePostImage(String image){
+        try {
+            amazonS3.deleteObject(bucket, image);
+        } catch (RuntimeException e) {
+            log.error("삭제 실패 파일명 = {}", image, e);
         }
     }
 
@@ -95,7 +127,7 @@ public class S3ImageUploader {
 
     private String extractFileName(String originalFileName) {
         int pos = originalFileName.lastIndexOf(".");
-        String fileName = originalFileName.substring(0,pos);
+        String fileName = originalFileName.substring(0, pos);
         return fileName;
     }
 }
