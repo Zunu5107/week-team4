@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.clone.team4.domain.like.entity.Like;
 import com.clone.team4.domain.like.repository.LikeRepository;
 import com.clone.team4.domain.post.entity.Post;
+import com.clone.team4.domain.post.exception.PostNotFoundException;
 import com.clone.team4.domain.post.repository.PostRepository;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.global.dto.BaseResponseDto;
@@ -24,7 +25,7 @@ public class LikeService {
     public BaseResponseDto postLike(Long postId, AccountInfo accountInfo) {
 
         Post findPost = postRepository.findById(postId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 포스트가 없습니다."));
+            .orElseThrow(() -> new PostNotFoundException("해당하는 포스트가 없습니다"));
 
         Like findLike = likeRepository.findByPostIdAndAccountId(findPost.getId(),
             accountInfo.getId());
