@@ -42,7 +42,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
-        if(req.getMethod().equals(HttpMethod.OPTIONS))
+        if(req.getMethod().equals(HttpMethod.OPTIONS.name()))
             return;
 //                 헤더 확인하기
         Enumeration em = req.getHeaderNames();
