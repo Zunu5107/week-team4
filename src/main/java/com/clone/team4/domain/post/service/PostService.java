@@ -130,6 +130,7 @@ public class PostService {
             .where(post.id.eq(postId).and(post.accountInfo.id.eq(accountInfo.getId())))
             .fetchFirst();
 
+
         if (!(postAccountId != null || accountInfo.getRole().equals(UserRoleEnum.ADMIN)))
             throw new IllegalArgumentException("권한이 없습니다.");
 

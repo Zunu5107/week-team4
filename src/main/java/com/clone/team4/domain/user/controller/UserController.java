@@ -3,6 +3,7 @@ package com.clone.team4.domain.user.controller;
 import com.clone.team4.domain.user.dto.SignupRequestDto;
 import com.clone.team4.domain.user.service.UserService;
 import com.clone.team4.global.dto.CustomStatusResponseDto;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
