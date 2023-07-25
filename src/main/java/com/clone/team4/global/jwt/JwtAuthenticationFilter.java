@@ -1,20 +1,17 @@
 package com.clone.team4.global.jwt;
 
-import com.clone.team4.domain.user.dto.UsernameAndImageResopnseDto;
-import com.clone.team4.domain.user.entity.AccountInfo;
-import com.clone.team4.global.dto.CustomStatusAndMessageAndDataResponseDto;
-import com.clone.team4.global.dto.CustomStatusAndMessageListResponseDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.clone.team4.domain.user.dto.LoginRequestDto;
-import com.clone.team4.domain.user.dto.UsernameResponseDto;
-import com.clone.team4.domain.user.entity.UserRoleEnum;
+import com.clone.team4.domain.user.entity.AccountInfo;
+import com.clone.team4.global.dto.BaseResponseDto;
+import com.clone.team4.global.dto.ErrorLoginMessageDto;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
 import com.clone.team4.global.sercurity.UserDetailsServiceImpl;
-import com.clone.team4.global.dto.ErrorLoginMessageDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,7 +19,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -73,9 +69,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         ObjectMapper objectMapper = new ObjectMapper();
-        UsernameAndImageResopnseDto data = new UsernameAndImageResopnseDto(accountInfo.getNickname(), accountInfo.getProfileImage());
-        CustomStatusAndMessageAndDataResponseDto<UsernameAndImageResopnseDto> responseDto =
-                new CustomStatusAndMessageAndDataResponseDto<>(200,"success", data);
+
+//        UsernameAndImageResopnseDto data = new UsernameAndImageResopnseDto(accountInfo.getNickname(), accountInfo.getProfileImage());
+//        BaseResponseDto<UsernameAndImageResopnseDto> responseDto =
+//                new BaseResponseDto<>("200","success", data);
+        BaseResponseDto responseDto = BaseResponseDto.MessageBuilder()
+                .status(200)
+                .msg("success")
+                .addMessage("nickname", accountInfo.getNickname())
+                .addMessage("userImage", accountInfo.getProfileImage())
+                .build();
+
         String str = objectMapper.writeValueAsString(responseDto);
         response.getWriter().write(str);
     }

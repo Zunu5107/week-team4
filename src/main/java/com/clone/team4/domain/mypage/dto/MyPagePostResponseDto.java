@@ -1,4 +1,4 @@
-package com.clone.team4.global.dto;
+package com.clone.team4.domain.mypage.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomStatusAndMessageAndDataResponseDto<T>  {
-
-    Integer status;
-    String msg;
-    T data;
-
+public class MyPagePostResponseDto {
+    private Long postId;
+    private String postImage;
 }
