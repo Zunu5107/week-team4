@@ -3,6 +3,7 @@ package com.clone.team4.domain.post.controller;
 import com.clone.team4.domain.post.dto.PageDto;
 import com.clone.team4.domain.post.dto.PageParam;
 import com.clone.team4.domain.post.dto.PostRequestDto;
+import com.clone.team4.domain.post.exception.handler.PostExceptionHandler;
 import com.clone.team4.domain.post.service.PostService;
 import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @Slf4j(topic = "post controller")
-public class PostController {
+public class PostController implements PostExceptionHandler {
 
     private final PostService postService;
 
@@ -28,6 +29,7 @@ public class PostController {
     public ResponseEntity<PageDto> getPostsByCategory(@ModelAttribute PageParam pageParam){
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPosts(pageParam));
     }
+
     @GetMapping("/posts/{postId}")
     public ResponseEntity<BaseResponseDto> getPostById(@PathVariable Long postId) {
         BaseResponseDto<?> response = postService.getPostById(postId);

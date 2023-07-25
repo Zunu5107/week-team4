@@ -17,7 +17,7 @@ public class ImageValidator {
 
     public void validateImageFile(MultipartFile multipartFile) {
         if (multipartFile.isEmpty()) {
-            throw new IllegalArgumentException("잘못된 요청입니다.");
+            throw new IllegalArgumentException("이미지가 존재하지 않습니다.");
         }
         if (!isImageFile(multipartFile)) {
             throw new IllegalArgumentException("이미지 파일이 아닙니다.");
