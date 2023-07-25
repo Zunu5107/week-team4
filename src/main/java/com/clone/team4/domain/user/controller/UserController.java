@@ -1,6 +1,5 @@
 package com.clone.team4.domain.user.controller;
 
-import com.clone.team4.domain.mypage.dto.MyPageResponseDto;
 import com.clone.team4.domain.user.dto.SignupRequestDto;
 import com.clone.team4.domain.user.service.UserService;
 import com.clone.team4.global.dto.BaseResponseDto;
@@ -11,15 +10,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Slf4j
 @RestController
