@@ -30,3 +30,14 @@ AES:
 jwt:
   secret:
     key: ENC(6G4XOlFMGow3MRX0C+VrLLEakQzy/YXCusF7y0aVWdDIGxYhTk+2maaVyo3urCq2TZWBPYgN6pbAJFg5S/8QZ0LnLlnk567L5QHc/BmNCk3LsG80nT0G5Oa7jYCh72Gx/lynNLYMErCoTDu559JRPwUehvIfdPh8s3qTbVoPexc=)
+cloud:
+  aws:
+    credentials:
+      accessKey: ENC(z9aqywsK0B3XPlAheiT+C/PVT56tcZrgI/I0V6pOUKeLU90m/THWdD3cQnpLkDvGougjwqVgpW8u4+ZAi04lVQ==)
+      secretKey: ENC(04eF+Z7ygPEiu06gV3jYS7zh21ZJiS0ecdQa7JvQji2yw6D1TKO/rJCxR+TPVb/S+0z0LrqNRqOjaV6rEs1ClUVrdpMUcTNu4Gg1sh0y864=)
+    s3:
+      bucket: ENC(fnnh/uhVNcgQ4R8aqAkbmYJKJkx/I6B1BnsDoc34bIHYcDIauJNgDgyOqGLfQtkXzVURIkUODNwMkkELziq4sA==)
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
