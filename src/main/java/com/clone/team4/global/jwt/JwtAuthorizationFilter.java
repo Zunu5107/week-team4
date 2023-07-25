@@ -8,8 +8,10 @@ import com.clone.team4.global.sercurity.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,10 +19,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
 
 import static com.clone.team4.global.custom.CustomStaticMethodClass.setFailResponse;
 import static com.clone.team4.global.jwt.JwtUtil.ACCESS_HEADER;
@@ -40,6 +45,25 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
+
+//                 헤더 확인하기
+        Enumeration em = req.getHeaderNames();
+        while(em.hasMoreElements()) {
+            String name = (String)em.nextElement();
+            String value = req.getHeader(name);
+            System.out.println("name = " + name);
+            System.out.println("value = " + value);
+        }
+//
+//        for (Part part : req.getParts()) {
+//            InputStream inputStream = part.getInputStream();
+//            System.out.println("part.getName() = " + part.getName());
+//            byte[] rawData = StreamUtils.copyToByteArray(inputStream);
+//            String result = new String(rawData);
+//            System.out.println("part.result = " + result);
+//        }
+//        System.out.println("req.getInputStream() = " + req.getInputStream());
+
 
         //String tokenValue = jwtUtil.getTokenFromRequest(req);
         log.info("Token Filter");

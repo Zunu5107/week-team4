@@ -17,3 +17,10 @@ spring:
       port: 6379
       repositories:
         enabled: false
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 10MB
+max:
+  image:
+    count: 10

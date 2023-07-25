@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "post")
 @Getter
@@ -27,10 +29,39 @@ public class Post extends Timestamped {
     private Long likeCount;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accountInfo_id", nullable = false)
+    @JoinColumn(name = "account_info_id", nullable = false)
     private AccountInfo accountInfo;
 
+    private int detailsCount;
 
-//    @OneToMany(fetch = FetchType.LAZY)
+    public Post(String category, Long likeCount, AccountInfo accountInfo) {
+        this.category = category;
+        this.likeCount = likeCount;
+        this.accountInfo = accountInfo;
+    }
+
+    public Post(String category, AccountInfo accountInfo, int detailsCount){
+        this.detailsCount = detailsCount;
+        this.category = category;
+        this.likeCount = 0L;
+        this.accountInfo = accountInfo;
+    }
+
+    public void updatePost(String category, int detailsCount) {
+        this.detailsCount = detailsCount;
+        this.category = category;
+        this.modifiedAt = LocalDateTime.now();
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount -= 1;
+    }
+
+
+    //    @OneToMany(fetch = FetchType.LAZY)
 //    private List<Comment> comments = new ArrayList<>();
 }

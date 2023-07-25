@@ -8,16 +8,23 @@ import com.clone.team4.domain.user.repository.UserRepository;
 import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.dto.CustomMessageResponseDto;
 import com.clone.team4.global.dto.CustomStatusResponseDto;
+import com.clone.team4.global.exception.CustomStatusException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.net.URI;
 
 @Slf4j
@@ -44,6 +51,10 @@ public class UserService {
                             CustomMessageResponseDto.builder("nickname", "same nickname error").build()));
         log.info("search nickname");
 
+        if (userRepository.findByEmail(requestDto.getEmail()).isPresent())
+            throw CustomStatusException.builder("Same Email").status(HttpStatus.CONFLICT).build();
+        if (accountInfoRepository.findByNickname(requestDto.getNickname()).isPresent())
+            throw CustomStatusException.builder("Same nickname!").status(HttpStatus.CONFLICT).build();
         User user = new User(requestDto.getEmail(), passwordEncoder.encode(requestDto.getPassword()));
         AccountInfo accountInfo = new AccountInfo(user, requestDto.getNickname());
 
@@ -51,17 +62,6 @@ public class UserService {
         accountInfoRepository.save(accountInfo);
 
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(new CustomStatusResponseDto(true));
-    }
-
-    public ResponseEntity loginkakao() {
-        URI uri = UriComponentsBuilder
-                .fromUriString("https://kauth.kakao.com")
-                .path("/oauth/token")
-                .encode()
-                .build()
-                .toUri();
-        log.info("uri = " + uri);
-        return ResponseEntity.ok().build();
     }
 }
 

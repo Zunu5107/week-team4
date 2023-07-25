@@ -21,9 +21,9 @@ public abstract class Timestamped {
     @LastModifiedDate
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime modifiedAt;
+    protected LocalDateTime modifiedAt;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime deletedAt;
+    protected LocalDateTime deletedAt;
 }
