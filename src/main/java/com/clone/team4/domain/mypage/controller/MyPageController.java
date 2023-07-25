@@ -7,10 +7,7 @@ import com.clone.team4.global.sercurity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +16,7 @@ public class MyPageController {
 
     private final MypageRepository mypageRepository;
     @GetMapping("/mypage")
-    public ResponseEntity test(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity getMyPage(@AuthenticationPrincipal UserDetailsImpl userDetails){
 
         MyPageResponseDto result = new MyPageResponseDto();
         result.setIntroduce(userDetails.getAccountInfo().getIntroduce());
@@ -37,10 +34,14 @@ public class MyPageController {
     }
 
     @GetMapping("/{nickname}")
-    public MyPageResponseDto test2(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                   @RequestParam("nickname") String nickname){
-
-
-        return null;
+    public ResponseEntity getMyPageForNickName(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                               @PathVariable String nickname){
+        MyPageResponseDto result = mypageRepository.findByMypageByAccountNickName(nickname);
+        BaseResponseDto<MyPageResponseDto> responseDto = BaseResponseDto.builder()
+                .msg("success")
+                .status(200)
+                .data(result)
+                .build();
+        return ResponseEntity.ok(responseDto);
     }
 }
