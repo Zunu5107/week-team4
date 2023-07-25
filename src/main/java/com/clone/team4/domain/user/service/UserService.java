@@ -5,6 +5,8 @@ import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.domain.user.entity.User;
 import com.clone.team4.domain.user.repository.AccountInfoRepository;
 import com.clone.team4.domain.user.repository.UserRepository;
+import com.clone.team4.global.dto.BaseResponseDto;
+import com.clone.team4.global.dto.CustomMessageResponseDto;
 import com.clone.team4.global.dto.CustomStatusResponseDto;
 import com.clone.team4.global.exception.CustomStatusException;
 import jakarta.mail.internet.MimeMessage;
@@ -19,8 +21,11 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.ArrayList;
+import java.net.URI;
 
 @Slf4j
 @Service
@@ -30,8 +35,21 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccountInfoRepository accountInfoRepository;
+    private final RestTemplateBuilder builder;
+//    private final RestTemplate restTemplate = builder.build();
 
-    public ResponseEntity<CustomStatusResponseDto> createAccount(SignupRequestDto requestDto) {
+    public ResponseEntity createAccount(SignupRequestDto requestDto) {
+        log.info("in create account");
+        if(userRepository.findByEmail(requestDto.getEmail()).isPresent())
+            return ResponseEntity.status(409).body(
+                    new BaseResponseDto<>("409", "CONFLICT",
+                            CustomMessageResponseDto.builder("email", "same email error").build()));
+        log.info("search email");
+        if(accountInfoRepository.findByNickname(requestDto.getNickname()).isPresent())
+            return ResponseEntity.status(409).body(
+                    new BaseResponseDto<>("409", "CONFLICT",
+                            CustomMessageResponseDto.builder("nickname", "same nickname error").build()));
+        log.info("search nickname");
 
         if (userRepository.findByEmail(requestDto.getEmail()).isPresent())
             throw CustomStatusException.builder("Same Email").status(HttpStatus.CONFLICT).build();
@@ -45,6 +63,13 @@ public class UserService {
 
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(new CustomStatusResponseDto(true));
     }
-
-
 }
+
+/*{
+  “status” : 200
+ “msg” : success
+  “data”: {
+     “userImage” : “userImage”
+   }
+ }
+ */

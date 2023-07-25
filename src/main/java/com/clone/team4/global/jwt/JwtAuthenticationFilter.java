@@ -69,6 +69,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         ObjectMapper objectMapper = new ObjectMapper();
+
 //        UsernameAndImageResopnseDto data = new UsernameAndImageResopnseDto(accountInfo.getNickname(), accountInfo.getProfileImage());
 //        BaseResponseDto<UsernameAndImageResopnseDto> responseDto =
 //                new BaseResponseDto<>("200","success", data);
@@ -78,6 +79,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .addMessage("nickname", accountInfo.getNickname())
                 .addMessage("userImage", accountInfo.getProfileImage())
                 .build();
+
         String str = objectMapper.writeValueAsString(responseDto);
         response.getWriter().write(str);
     }
