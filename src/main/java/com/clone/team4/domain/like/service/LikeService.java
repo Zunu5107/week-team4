@@ -1,9 +1,5 @@
 package com.clone.team4.domain.like.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.clone.team4.domain.like.entity.Like;
 import com.clone.team4.domain.like.repository.LikeRepository;
 import com.clone.team4.domain.post.entity.Post;
@@ -11,8 +7,10 @@ import com.clone.team4.domain.post.exception.PostNotFoundException;
 import com.clone.team4.domain.post.repository.PostRepository;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.global.dto.BaseResponseDto;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service

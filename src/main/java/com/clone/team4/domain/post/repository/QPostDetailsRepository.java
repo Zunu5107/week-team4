@@ -1,8 +1,8 @@
 package com.clone.team4.domain.post.repository;
 
-import java.util.List;
-
 import com.querydsl.core.Tuple;
+
+import java.util.List;
 
 public interface QPostDetailsRepository {
     Tuple findBySelectImageAndContentById(Long id);

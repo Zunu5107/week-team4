@@ -9,23 +9,12 @@ import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.dto.CustomMessageResponseDto;
 import com.clone.team4.global.dto.CustomStatusResponseDto;
 import com.clone.team4.global.exception.CustomStatusException;
-import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.ArrayList;
-import java.net.URI;
 
 @Slf4j
 @Service
@@ -35,8 +24,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccountInfoRepository accountInfoRepository;
-    private final RestTemplateBuilder builder;
-//    private final RestTemplate restTemplate = builder.build();
 
     public ResponseEntity createAccount(SignupRequestDto requestDto) {
         log.info("in create account");

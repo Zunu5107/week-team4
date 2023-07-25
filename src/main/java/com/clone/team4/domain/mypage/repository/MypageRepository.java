@@ -1,7 +1,6 @@
 package com.clone.team4.domain.mypage.repository;
 
 import com.clone.team4.domain.mypage.dto.MyPagePostResponseDto;
-import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.global.exception.CustomStatusException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
