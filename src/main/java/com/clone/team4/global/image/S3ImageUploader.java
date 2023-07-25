@@ -93,6 +93,15 @@ public class S3ImageUploader {
         }
     }
 
+    @Async
+    public void deletePostImage(String image){
+        try {
+            amazonS3.deleteObject(bucket, image);
+        } catch (RuntimeException e) {
+            log.error("삭제 실패 파일명 = {}", image, e);
+        }
+    }
+
     private ObjectMetadata createObjectMetadata(MultipartFile multipartFile) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(multipartFile.getContentType());

@@ -35,11 +35,12 @@ public class UserController {
         return userService.createAccount(requestDto);
     }
 
-    @PutMapping("/auth/update")
+    @PutMapping("/update")
     public ResponseEntity updateAccount(@RequestPart(value = "image", required = false) MultipartFile image,
                                 @RequestPart(value = "nickname", required = false) String nickname,
                                 @RequestPart(value = "introduce", required = false) String introduce,
                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        System.out.println("userDetails.getAccountInfo().getId() = " + userDetails.getAccountInfo().getId());
         BaseResponseDto responseDto = userService.updateAccount(image, nickname, introduce, userDetails);
         return ResponseEntity.status(200).body(responseDto);
     }

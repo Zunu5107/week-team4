@@ -59,7 +59,8 @@ public class UserService {
     }
 
     public BaseResponseDto updateAccount(MultipartFile image, String nickname, String introduce, UserDetailsImpl userDetails) {
-        String profileImage = imageUploader.storeImage(image, ImageFolderEnum.POST);
+        imageUploader.deletePostImage(userDetails.getAccountInfo().getProfileImage());
+        String profileImage = imageUploader.storeImage(image, ImageFolderEnum.PROFILE);
         AccountContentDao setAccount = new AccountContentDao(introduce, profileImage, nickname);
         accountInfoRepository.updateAccountInfoContent(userDetails.getUser().getId(), setAccount);
 
