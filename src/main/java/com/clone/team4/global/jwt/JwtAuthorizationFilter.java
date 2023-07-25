@@ -2,9 +2,9 @@ package com.clone.team4.global.jwt;
 
 
 import com.clone.team4.domain.user.entity.AccountInfo;
+import com.clone.team4.global.dto.ErrorLoginMessageDto;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
 import com.clone.team4.global.sercurity.UserDetailsServiceImpl;
-import com.clone.team4.global.dto.ErrorLoginMessageDto;
 import io.jsonwebtoken.*;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,6 +22,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import static com.clone.team4.global.custom.CustomStaticMethodClass.setFailResponse;
 import static com.clone.team4.global.jwt.JwtUtil.ACCESS_HEADER;
@@ -40,6 +42,26 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
+        if(req.getMethod().equals(HttpMethod.OPTIONS.name()))
+            return;
+//                 헤더 확인하기
+        Enumeration em = req.getHeaderNames();
+        while(em.hasMoreElements()) {
+            String name = (String)em.nextElement();
+            String value = req.getHeader(name);
+            System.out.println("name = " + name);
+            System.out.println("value = " + value);
+        }
+//
+//        for (Part part : req.getParts()) {
+//            InputStream inputStream = part.getInputStream();
+//            System.out.println("part.getName() = " + part.getName());
+//            byte[] rawData = StreamUtils.copyToByteArray(inputStream);
+//            String result = new String(rawData);
+//            System.out.println("part.result = " + result);
+//        }
+//        System.out.println("req.getInputStream() = " + req.getInputStream());
+
 
         //String tokenValue = jwtUtil.getTokenFromRequest(req);
         log.info("Token Filter");
@@ -80,7 +102,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 exceptionHandlerRefresh(res, e);
                 return;
             }
-        } else{
+        }
+        else{
             log.info("AccessTokenDenide");
             res.addHeader("AccessTokenDenide","true");
         }
@@ -111,8 +134,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             String username = userDetailsService.loadUsernameByRedis(uuid);
             if(username == null)
                 exceptionHandler(res, new NullPointerException());
-                setAuthenticationRefresh(res, username);
-
+            setAuthenticationRefresh(res, username);
         }
     }
 

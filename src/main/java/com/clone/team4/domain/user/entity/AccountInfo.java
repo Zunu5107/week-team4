@@ -32,8 +32,8 @@ public class AccountInfo {
     public AccountInfo(User user, String nickname) {
         this.user = user;
         this.nickname = nickname;
-        this.introduce = "default";
-        this.profileImage = null;
+        this.introduce = null;
+        this.profileImage = "default";
         this.role = UserRoleEnum.USER;
     }
 

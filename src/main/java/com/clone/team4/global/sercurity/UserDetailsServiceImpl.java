@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -37,7 +36,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByAccountInfo(String nickname) throws UsernameNotFoundException {
         AccountInfo accountInfo = accountInfoRepository.findByNickname(nickname)
                 .orElseThrow(() -> new UsernameNotFoundException("Not Found " + nickname));
-        return new UserDetailsImpl(accountInfo);
+        User user = userRepository.findById(accountInfo.getId())
+                .orElseThrow(() -> new UsernameNotFoundException("Not Found " + nickname));
+        return new UserDetailsImpl(user, accountInfo);
     }
 
     public String loadUsernameByRedis(String uuid){

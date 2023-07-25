@@ -10,12 +10,12 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class CustomStatusAndMessageResponseDto extends CustomStatusResponseDto{
+public class CustomStatusAndMessageListResponseDto extends CustomStatusResponseDto{
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     Map<String, String> msgList;
 
-    public CustomStatusAndMessageResponseDto(boolean status) {
+    public CustomStatusAndMessageListResponseDto(boolean status) {
         super(status);
         msgList = new LinkedHashMap<>();
     }

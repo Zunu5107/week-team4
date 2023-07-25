@@ -1,7 +1,7 @@
 package com.clone.team4.global.custom;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.clone.team4.global.dto.ErrorLoginMessageDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +36,6 @@ public class CustomStaticMethodClass {
         response.setCharacterEncoding("UTF-8");
         ObjectMapper objectMapper = new ObjectMapper();
         String str = objectMapper.writeValueAsString(errorLoginDto);
-        log.info("translate = " + str );
         response.getWriter().write(str);
     }
 }
