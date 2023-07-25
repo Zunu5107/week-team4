@@ -19,7 +19,7 @@ public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED")
-    private Long id;
+    private Long postId;
 
     @Column(name = "category", nullable = false)
     private String category;
@@ -62,6 +62,6 @@ public class Post extends Timestamped {
     }
 
 
-    //    @OneToMany(fetch = FetchType.LAZY)
+//    @OneToMany(fetch = FetchType.LAZY)
 //    private List<Comment> comments = new ArrayList<>();
 }
