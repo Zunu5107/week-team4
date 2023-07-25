@@ -37,3 +37,4 @@ out/
 .vscode/
 /src/main/resources/application-secret.yml
 /src/test/java/com/clone/team4/
+/src/main/java/com/clone/team4/domain/test/
