@@ -24,7 +24,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AccountInfoRepository accountInfoRepository;
-//    private final RestTemplate restTemplate = builder.build();
 
     public ResponseEntity createAccount(SignupRequestDto requestDto) {
         log.info("in create account");

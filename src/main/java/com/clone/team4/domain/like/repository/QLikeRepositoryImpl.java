@@ -11,10 +11,10 @@ import static com.clone.team4.domain.like.entity.QLike.like;
 @Repository
 public class QLikeRepositoryImpl implements QLikeRepository{
 
-    private final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 
     public Like findByPostIdAndAccountId(Long postId, Long accountId) {
-        return queryFactory.select(like)
+        return jpaQueryFactory.select(like)
                 .from(like)
                 .where(like.post.id.eq(postId)
                     .and(like.accountInfo.id.eq(accountId)))

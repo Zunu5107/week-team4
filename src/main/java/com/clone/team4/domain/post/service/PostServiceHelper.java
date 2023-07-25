@@ -7,6 +7,7 @@ import com.clone.team4.domain.user.entity.UserRoleEnum;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
@@ -22,25 +23,32 @@ public class PostServiceHelper {
     private final String[] CATEGORY_WHITELIST = {"취미일상","집사진"};
 
     public void validPostCreateRequest(List<MultipartFile> images, List<PostRequestDto> contentList, Integer imageCount, String category) {
-        if (!isValidImagesCount(images, contentList, imageCount) || !isValidCategoryRequest(category)) {
-            throw new IllegalArgumentException("잘못된 입력입니다.");
+        validateImageAndContentCount(images, contentList, imageCount);
+        validateCategory(category);
+        validationContentNotBlank(contentList);
+    }
+
+    private void validateImageAndContentCount(List<MultipartFile> images, List<PostRequestDto> contentList, Integer imageCount) {
+        int imageListSize = images.size();
+        int contentListSize = contentList.size();
+        if ((imageListSize != imageCount || contentListSize != imageCount) ||
+            (imageListSize == 0 || imageListSize > MAX_IMAGE_COUNT) || (contentListSize == 0 || contentListSize > MAX_IMAGE_COUNT)){
+            throw new IllegalArgumentException("잘못된 이미지 입력입니다.");
         }
     }
 
-    private boolean isValidImagesCount(List<MultipartFile> images, List<PostRequestDto> contentList, Integer imageCount) {
-        int imageListSize = images.size();
-        int contentListSize = contentList.size();
-        return (imageListSize == imageCount && contentListSize == imageCount) &&
-            (imageListSize > 0 && imageListSize <= MAX_IMAGE_COUNT) && (contentListSize > 0 && contentListSize <= MAX_IMAGE_COUNT);
+    private void validationContentNotBlank(List<PostRequestDto> contentList) {
+        for (PostRequestDto postRequestDto : contentList) {
+            if (!StringUtils.hasText(postRequestDto.getContent())){
+                throw new IllegalArgumentException("내용은 공백일 수 없습니다.");
+            }
+        }
     }
 
-    public void validPostFindRequest(String category) {
-        if(!isValidCategoryRequest(category))
-            throw new IllegalArgumentException("잘못된 입력입니다.");
-    }
-
-    private boolean isValidCategoryRequest(String category) {
-        return Arrays.asList(CATEGORY_WHITELIST).contains(category);
+    public void validateCategory(String category) {
+        if(!Arrays.asList(CATEGORY_WHITELIST).contains(category)) {
+            throw new IllegalArgumentException("잘못된 카테고리 입력입니다.");
+        }
     }
 
     public boolean hasRole(AccountInfo accountInfo, Post post) {
@@ -48,7 +56,7 @@ public class PostServiceHelper {
             accountInfo.getRole().equals(UserRoleEnum.ADMIN);
     }
 
-    public boolean hasRole(AccountInfo accountInfo, Long postAccountId) {
-        return postAccountId != null || accountInfo.getRole().equals(UserRoleEnum.ADMIN);
+    public boolean hasRole(AccountInfo accountInfo, boolean isPostOwner) {
+        return isPostOwner || accountInfo.getRole().equals(UserRoleEnum.ADMIN);
     }
 }

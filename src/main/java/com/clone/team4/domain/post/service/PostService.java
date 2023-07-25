@@ -4,14 +4,15 @@ import com.amazonaws.util.StringUtils;
 import com.clone.team4.domain.post.dto.*;
 import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.domain.post.entity.PostDetails;
+import com.clone.team4.domain.post.exception.PostNotFoundException;
 import com.clone.team4.domain.post.repository.PostDetailsRepository;
 import com.clone.team4.domain.post.repository.PostRepository;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.global.dto.BaseResponseDto;
+import com.clone.team4.global.exception.PermissionDeniedException;
 import com.clone.team4.global.image.ImageFolderEnum;
 import com.clone.team4.global.image.S3ImageUploader;
 import com.querydsl.core.Tuple;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -22,10 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.clone.team4.domain.post.entity.QPost.post;
 import static com.clone.team4.domain.post.entity.QPostDetails.postDetails;
 @Slf4j(topic = "PostService")
 @Service
@@ -37,8 +36,6 @@ public class PostService {
     private final S3ImageUploader s3ImageUploader;
     private final PostServiceHelper postServiceHelper;
 
-    private final JPAQueryFactory jpaQueryFactory;
-
     @Transactional(readOnly = true)
     public PageDto<?> getPosts(PageParam pageParam) {
         log.info("page param = {}, {}, {}", pageParam.getPage(), pageParam.getSize(), pageParam.getCategory());
@@ -49,7 +46,7 @@ public class PostService {
         if (StringUtils.isNullOrEmpty(pageParam.getCategory())) {
             postList = postRepository.findPostsNotDeleted(pageable).map(PostResponseDto::new);
         } else {
-            postServiceHelper.validPostFindRequest(pageParam.getCategory());
+            postServiceHelper.validateCategory(pageParam.getCategory());
             postList = postRepository.findPostsByCategoryNotDeleted(pageParam.getCategory(), pageable).map(PostResponseDto::new);
         }
 
@@ -107,14 +104,10 @@ public class PostService {
         Post savedPost = findById(postId);
 
         if (!postServiceHelper.hasRole(accountInfo,savedPost)){
-            throw new IllegalArgumentException("권한이 없습니다.");
+            throw new PermissionDeniedException("권한이 없습니다.");
         }
 
-        List<String> savedImages = jpaQueryFactory
-            .select(postDetails.image)
-            .from(postDetails)
-            .where(postDetails.post.id.eq(savedPost.getId()))
-            .fetch();
+        List<String> savedImages = postDetailsRepository.getPostImages(savedPost.getId());
 
         s3ImageUploader.deletePostImages(savedImages);
 
@@ -131,20 +124,17 @@ public class PostService {
 
     @Transactional
     public BaseResponseDto deletePost(Long postId, AccountInfo accountInfo){
-        Long postAccountId = jpaQueryFactory.select(post.accountInfo.id)
-            .from(post)
-            .where(post.id.eq(postId).and(post.accountInfo.id.eq(accountInfo.getId())))
-            .fetchFirst();
+        boolean isPostOwner = postRepository.isPostOwner(postId, accountInfo);
 
-        if (!postServiceHelper.hasRole(accountInfo, postAccountId))
-            throw new IllegalArgumentException("권한이 없습니다.");
+        if (!postServiceHelper.hasRole(accountInfo, isPostOwner))
+            throw new PermissionDeniedException("권한이 없습니다.");
 
-        jpaQueryFactory.update(post).set(post.deletedAt, LocalDateTime.now()).where(post.id.eq(postId), post.accountInfo.id.eq(accountInfo.getId())).execute();
+        postRepository.deletePost(postId, accountInfo);
         return new BaseResponseDto(HttpStatus.OK.toString(), "게시글 삭제 성공",null);
     }
 
     private Post findById(Long postId) {
        return postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 포스트가 없습니다."));
+                .orElseThrow(() -> new PostNotFoundException("해당하는 포스트가 없습니다."));
     }
 }
