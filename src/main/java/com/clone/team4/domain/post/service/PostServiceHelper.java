@@ -7,7 +7,6 @@ import com.clone.team4.domain.user.entity.UserRoleEnum;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
@@ -25,7 +24,6 @@ public class PostServiceHelper {
     public void validPostCreateRequest(List<MultipartFile> images, List<PostRequestDto> contentList, Integer imageCount, String category) {
         validateImageAndContentCount(images, contentList, imageCount);
         validateCategory(category);
-        validationContentNotBlank(contentList);
     }
 
     private void validateImageAndContentCount(List<MultipartFile> images, List<PostRequestDto> contentList, Integer imageCount) {
@@ -34,14 +32,6 @@ public class PostServiceHelper {
         if ((imageListSize != imageCount || contentListSize != imageCount) ||
             (imageListSize == 0 || imageListSize > MAX_IMAGE_COUNT) || (contentListSize == 0 || contentListSize > MAX_IMAGE_COUNT)){
             throw new IllegalArgumentException("잘못된 이미지 입력입니다.");
-        }
-    }
-
-    private void validationContentNotBlank(List<PostRequestDto> contentList) {
-        for (PostRequestDto postRequestDto : contentList) {
-            if (!StringUtils.hasText(postRequestDto.getContent())){
-                throw new IllegalArgumentException("내용은 공백일 수 없습니다.");
-            }
         }
     }
 

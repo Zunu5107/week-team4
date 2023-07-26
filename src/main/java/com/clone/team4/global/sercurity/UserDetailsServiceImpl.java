@@ -1,6 +1,5 @@
 package com.clone.team4.global.sercurity;
 
-
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.domain.user.entity.User;
 import com.clone.team4.domain.user.repository.AccountInfoRepository;

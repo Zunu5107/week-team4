@@ -30,7 +30,7 @@ public class MyPageController {
         result.setUserImage(userDetails.getAccountInfo().getProfileImage());
         result.setPostList(mypageRepository.findByMyPost(userDetails.getAccountInfo().getId()));
         result.setPostList(mypageRepository.findByMyLikePost(userDetails.getAccountInfo().getId()));
-        BaseResponseDto<MyPageResponseDto> responseDto = BaseResponseDto.builder()
+        BaseResponseDto responseDto = BaseResponseDto.builder()
                 .msg("success")
                 .status(200)
                 .data(result)
@@ -43,7 +43,7 @@ public class MyPageController {
     public ResponseEntity getMyPageForNickName(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                @PathVariable String nickname){
         MyPageResponseDto result = mypageRepository.findByMypageByAccountNickName(nickname);
-        BaseResponseDto<MyPageResponseDto> responseDto = BaseResponseDto.builder()
+        BaseResponseDto responseDto = BaseResponseDto.builder()
                 .msg("success")
                 .status(200)
                 .data(result)
