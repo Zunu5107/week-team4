@@ -1,11 +1,5 @@
 package com.clone.team4.domain.user.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.clone.team4.domain.user.dao.AccountContentDao;
 import com.clone.team4.domain.user.dto.AccountInfoResponseDto;
 import com.clone.team4.domain.user.dto.SignupRequestDto;
@@ -20,9 +14,13 @@ import com.clone.team4.global.exception.CustomStatusException;
 import com.clone.team4.global.image.ImageFolderEnum;
 import com.clone.team4.global.image.S3ImageUploader;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service

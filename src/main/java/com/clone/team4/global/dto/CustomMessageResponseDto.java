@@ -1,9 +1,9 @@
 package com.clone.team4.global.dto;
 
+import lombok.Getter;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import lombok.Getter;
 
 @Getter
 public class CustomMessageResponseDto {

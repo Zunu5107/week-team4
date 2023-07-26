@@ -1,22 +1,20 @@
 package com.clone.team4.domain.mypage.repository;
 
-import static com.clone.team4.domain.like.entity.QLike.*;
-import static com.clone.team4.domain.post.entity.QPost.*;
-import static com.clone.team4.domain.post.entity.QPostDetails.*;
-import static com.clone.team4.domain.user.entity.QAccountInfo.*;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Repository;
-
 import com.clone.team4.domain.mypage.dto.MyPagePostResponseDto;
 import com.clone.team4.domain.mypage.dto.MyPageResponseDto;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.global.exception.CustomStatusException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.clone.team4.domain.like.entity.QLike.like;
+import static com.clone.team4.domain.post.entity.QPost.post;
+import static com.clone.team4.domain.post.entity.QPostDetails.postDetails;
+import static com.clone.team4.domain.user.entity.QAccountInfo.accountInfo;
 
 @Repository
 @RequiredArgsConstructor

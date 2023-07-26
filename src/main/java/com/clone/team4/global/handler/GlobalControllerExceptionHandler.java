@@ -1,7 +1,9 @@
 package com.clone.team4.global.handler;
 
-import static com.clone.team4.global.dto.BaseResponseDto.*;
-
+import com.clone.team4.global.dto.BaseResponseDto;
+import com.clone.team4.global.dto.ErrorResponseDto;
+import com.clone.team4.global.exception.CustomStatusException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -9,11 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.clone.team4.global.dto.BaseResponseDto;
-import com.clone.team4.global.dto.ErrorResponseDto;
-import com.clone.team4.global.exception.CustomStatusException;
-
-import lombok.extern.slf4j.Slf4j;
+import static com.clone.team4.global.dto.BaseResponseDto.BaseMessageResponseDtoBuilder;
 
 @Slf4j
 @RestControllerAdvice

@@ -1,7 +1,6 @@
 package com.clone.team4.domain.comment.dto;
 
 import com.clone.team4.domain.comment.entity.Comment;
-
 import lombok.Getter;
 
 @Getter

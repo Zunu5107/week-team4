@@ -1,22 +1,20 @@
 package com.clone.team4.domain.post.repository;
 
-import static com.clone.team4.domain.post.entity.QPost.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.stereotype.Repository;
-
 import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.domain.post.entity.QPost;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.clone.team4.domain.post.entity.QPost.post;
 
 @Repository
 @RequiredArgsConstructor

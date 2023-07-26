@@ -1,11 +1,10 @@
 package com.clone.team4.global.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import lombok.Getter;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)

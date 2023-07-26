@@ -1,12 +1,11 @@
 package com.clone.team4.domain.post.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.clone.team4.domain.post.entity.Post;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor

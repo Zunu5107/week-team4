@@ -1,29 +1,21 @@
 package com.clone.team4.domain.user.controller;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.clone.team4.domain.user.dto.SignupRequestDto;
 import com.clone.team4.domain.user.service.UserService;
 import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.dto.CustomStatusResponseDto;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @Slf4j
 @RestController

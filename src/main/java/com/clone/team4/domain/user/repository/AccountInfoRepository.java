@@ -1,10 +1,9 @@
 package com.clone.team4.domain.user.repository;
 
-import java.util.Optional;
-
+import com.clone.team4.domain.user.entity.AccountInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.clone.team4.domain.user.entity.AccountInfo;
+import java.util.Optional;
 
 public interface AccountInfoRepository extends JpaRepository<AccountInfo, Long>, QAccountInfoRepository {
     Optional<AccountInfo> findByNickname(String nickname);

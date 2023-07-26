@@ -1,10 +1,5 @@
 package com.clone.team4.domain.comment.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AuthorizationServiceException;
-import org.springframework.stereotype.Service;
-
 import com.clone.team4.domain.comment.dto.CommentRequestDto;
 import com.clone.team4.domain.comment.entity.Comment;
 import com.clone.team4.domain.comment.repository.CommentRepository;
@@ -13,9 +8,12 @@ import com.clone.team4.domain.post.service.PostService;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
