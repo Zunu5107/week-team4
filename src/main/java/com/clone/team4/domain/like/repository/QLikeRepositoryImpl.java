@@ -1,11 +1,13 @@
 package com.clone.team4.domain.like.repository;
 
-import com.clone.team4.domain.like.entity.Like;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
+import static com.clone.team4.domain.like.entity.QLike.*;
+
 import org.springframework.stereotype.Repository;
 
-import static com.clone.team4.domain.like.entity.QLike.like;
+import com.clone.team4.domain.like.entity.Like;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Repository

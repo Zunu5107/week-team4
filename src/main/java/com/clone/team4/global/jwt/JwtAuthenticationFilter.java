@@ -1,17 +1,11 @@
 package com.clone.team4.global.jwt;
 
-import com.clone.team4.domain.user.dto.LoginRequestDto;
-import com.clone.team4.domain.user.entity.AccountInfo;
-import com.clone.team4.global.dto.BaseResponseDto;
-import com.clone.team4.global.dto.ErrorLoginMessageDto;
-import com.clone.team4.global.sercurity.UserDetailsImpl;
-import com.clone.team4.global.sercurity.UserDetailsServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
+import static com.clone.team4.global.custom.CustomStaticMethodClass.*;
+import static com.clone.team4.global.jwt.JwtUtil.*;
+
+import java.io.IOException;
+import java.util.UUID;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,12 +13,19 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.io.IOException;
-import java.util.UUID;
+import com.clone.team4.domain.user.dto.LoginRequestDto;
+import com.clone.team4.domain.user.entity.AccountInfo;
+import com.clone.team4.global.dto.BaseResponseDto;
+import com.clone.team4.global.dto.ErrorLoginMessageDto;
+import com.clone.team4.global.sercurity.UserDetailsImpl;
+import com.clone.team4.global.sercurity.UserDetailsServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static com.clone.team4.global.custom.CustomStaticMethodClass.setFailResponse;
-import static com.clone.team4.global.jwt.JwtUtil.ACCESS_HEADER;
-import static com.clone.team4.global.jwt.JwtUtil.AUTHORIZATION_HEADER;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = "로그인 및 JWT 생성")
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {

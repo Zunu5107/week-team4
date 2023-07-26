@@ -1,12 +1,13 @@
 package com.clone.team4.domain.post.exception.handler;
 
-import com.clone.team4.domain.post.exception.PostNotFoundException;
-import com.clone.team4.global.dto.BaseResponseDto;
-import com.clone.team4.global.exception.PermissionDeniedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.clone.team4.domain.post.exception.PostNotFoundException;
+import com.clone.team4.global.dto.BaseResponseDto;
+import com.clone.team4.global.exception.PermissionDeniedException;
 
 @RestControllerAdvice
 public interface PostExceptionHandler {

@@ -1,7 +1,24 @@
 package com.clone.team4.domain.post.service;
 
+import static com.clone.team4.domain.post.entity.QPostDetails.*;
+
+import java.util.List;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.amazonaws.util.StringUtils;
-import com.clone.team4.domain.post.dto.*;
+import com.clone.team4.domain.post.dto.PageDto;
+import com.clone.team4.domain.post.dto.PageParam;
+import com.clone.team4.domain.post.dto.PostDetailsResponseDto;
+import com.clone.team4.domain.post.dto.PostInfoResponseDto;
+import com.clone.team4.domain.post.dto.PostRequestDto;
+import com.clone.team4.domain.post.dto.PostResponseDto;
 import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.domain.post.entity.PostDetails;
 import com.clone.team4.domain.post.exception.PostNotFoundException;
@@ -13,19 +30,9 @@ import com.clone.team4.global.exception.PermissionDeniedException;
 import com.clone.team4.global.image.ImageFolderEnum;
 import com.clone.team4.global.image.S3ImageUploader;
 import com.querydsl.core.Tuple;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-
-import static com.clone.team4.domain.post.entity.QPostDetails.postDetails;
 @Slf4j(topic = "PostService")
 @Service
 @RequiredArgsConstructor
@@ -133,7 +140,7 @@ public class PostService {
         return new BaseResponseDto(HttpStatus.OK.toString(), "게시글 삭제 성공",null);
     }
 
-    private Post findById(Long postId) {
+    public Post findById(Long postId) {
        return postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("해당하는 포스트가 없습니다."));
     }

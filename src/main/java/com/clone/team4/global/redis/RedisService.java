@@ -1,11 +1,12 @@
 package com.clone.team4.global.redis;
 
-import lombok.RequiredArgsConstructor;
+import java.time.Duration;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
+import lombok.RequiredArgsConstructor;
 
 
 @Service

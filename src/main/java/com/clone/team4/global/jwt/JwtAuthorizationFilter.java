@@ -1,16 +1,11 @@
 package com.clone.team4.global.jwt;
 
+import static com.clone.team4.global.custom.CustomStaticMethodClass.*;
+import static com.clone.team4.global.jwt.JwtUtil.*;
 
-import com.clone.team4.domain.user.entity.AccountInfo;
-import com.clone.team4.global.dto.ErrorLoginMessageDto;
-import com.clone.team4.global.sercurity.UserDetailsImpl;
-import com.clone.team4.global.sercurity.UserDetailsServiceImpl;
-import io.jsonwebtoken.*;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.Enumeration;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,11 +16,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
-import java.util.Enumeration;
+import com.clone.team4.domain.user.entity.AccountInfo;
+import com.clone.team4.global.dto.ErrorLoginMessageDto;
+import com.clone.team4.global.sercurity.UserDetailsImpl;
+import com.clone.team4.global.sercurity.UserDetailsServiceImpl;
 
-import static com.clone.team4.global.custom.CustomStaticMethodClass.setFailResponse;
-import static com.clone.team4.global.jwt.JwtUtil.ACCESS_HEADER;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 public class JwtAuthorizationFilter extends OncePerRequestFilter {

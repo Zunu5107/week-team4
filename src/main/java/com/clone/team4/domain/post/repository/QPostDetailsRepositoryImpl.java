@@ -1,13 +1,15 @@
 package com.clone.team4.domain.post.repository;
 
-import com.querydsl.core.Tuple;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import static com.clone.team4.domain.post.entity.QPostDetails.*;
 
 import java.util.List;
 
-import static com.clone.team4.domain.post.entity.QPostDetails.postDetails;
+import org.springframework.stereotype.Repository;
+
+import com.querydsl.core.Tuple;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
