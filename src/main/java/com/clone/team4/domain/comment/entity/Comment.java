@@ -31,7 +31,6 @@ public class Comment extends Timestamped {
     @JoinColumn(name="accountInfo_id")
     public AccountInfo accountInfo;
 
-
     public Comment(CommentRequestDto requestDto, Post post, AccountInfo accountInfo) {
         this.comment = requestDto.getComment();
         this.post = post;

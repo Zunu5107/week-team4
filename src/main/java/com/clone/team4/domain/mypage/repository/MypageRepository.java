@@ -6,6 +6,7 @@ import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.global.exception.CustomStatusException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -16,25 +17,17 @@ import static com.clone.team4.domain.post.entity.QPost.post;
 import static com.clone.team4.domain.post.entity.QPostDetails.postDetails;
 import static com.clone.team4.domain.user.entity.QAccountInfo.accountInfo;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class MypageRepository {
     private final JPAQueryFactory queryFactory;
 
-    public MyPageResponseDto findByMypageByAccountNickName(String nickname){
-        AccountInfo selectId = queryFactory.selectFrom(accountInfo).where(accountInfo.nickname.eq(nickname)).fetchFirst();
-        MyPageResponseDto result = new MyPageResponseDto();
-        result.setIntroduce(selectId.getIntroduce());
-        result.setNickname(selectId.getNickname());
-        result.setUserImage(selectId.getProfileImage());
-        result.setPostList(findByMyPost(selectId.getId()));
-        return result;
-    }
-
     public List<MyPagePostResponseDto> findByMyPost(Long userId){
         List<MyPagePostResponseDto> result = new ArrayList<>();
         List<Long> postList = queryFactory.select(post.id).from(post).where(post.accountInfo.id.eq(userId)).fetch();
         for (Long aLong : postList) {
+            log.info(aLong.toString());
             result.add(new MyPagePostResponseDto(aLong, findByPostImageById(aLong)));
         }
         return result;

@@ -2,6 +2,7 @@ package com.clone.team4.domain.mypage.controller;
 
 import com.clone.team4.domain.mypage.dto.MyPageResponseDto;
 import com.clone.team4.domain.mypage.repository.MypageRepository;
+import com.clone.team4.domain.mypage.service.MyPageService;
 import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.exception.CustomStatusException;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
@@ -13,41 +14,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class MyPageController {
 
-    private final MypageRepository mypageRepository;
+    private final MyPageService myPageService;
     @GetMapping("/mypage")
-    public ResponseEntity getMyPage(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        if(userDetails == null)
-            throw CustomStatusException.builder("회원 정보가 존재하지 않습니다.").status(404).build();
-
-        MyPageResponseDto result = new MyPageResponseDto();
-        result.setIntroduce(userDetails.getAccountInfo().getIntroduce());
-        result.setNickname(userDetails.getAccountInfo().getNickname());
-        result.setUserImage(userDetails.getAccountInfo().getProfileImage());
-        result.setPostList(mypageRepository.findByMyPost(userDetails.getAccountInfo().getId()));
-        result.setPostList(mypageRepository.findByMyLikePost(userDetails.getAccountInfo().getId()));
-        BaseResponseDto responseDto = BaseResponseDto.builder()
-                .msg("success")
-                .status(200)
-                .data(result)
-                .build();
-
-        return ResponseEntity.ok(responseDto);
+    public ResponseEntity<?> getMyPage(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        BaseResponseDto<?> responseDto = myPageService.getMyPage(userDetails.getAccountInfo());
+        return ResponseEntity.status(Integer.parseInt(responseDto.getStatus())).body(responseDto);
     }
 
     @GetMapping("/{nickname}")
-    public ResponseEntity getMyPageForNickName(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public ResponseEntity<?> getMyPageForNickName(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                @PathVariable String nickname){
-        MyPageResponseDto result = mypageRepository.findByMypageByAccountNickName(nickname);
-        BaseResponseDto responseDto = BaseResponseDto.builder()
-                .msg("success")
-                .status(200)
-                .data(result)
-                .build();
-        return ResponseEntity.ok(responseDto);
+
+        BaseResponseDto<?> responseDto = myPageService.getMyPageForNickName(nickname);
+        return ResponseEntity.status(Integer.parseInt(responseDto.getStatus())).body(responseDto);
     }
 }
