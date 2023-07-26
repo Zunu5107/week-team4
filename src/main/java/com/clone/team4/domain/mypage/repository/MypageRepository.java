@@ -1,8 +1,6 @@
 package com.clone.team4.domain.mypage.repository;
 
 import com.clone.team4.domain.mypage.dto.MyPagePostResponseDto;
-import com.clone.team4.domain.mypage.dto.MyPageResponseDto;
-import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.global.exception.CustomStatusException;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +13,6 @@ import java.util.List;
 import static com.clone.team4.domain.like.entity.QLike.like;
 import static com.clone.team4.domain.post.entity.QPost.post;
 import static com.clone.team4.domain.post.entity.QPostDetails.postDetails;
-import static com.clone.team4.domain.user.entity.QAccountInfo.accountInfo;
 
 @Slf4j
 @Repository

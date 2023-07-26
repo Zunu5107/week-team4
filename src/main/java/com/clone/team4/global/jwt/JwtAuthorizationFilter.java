@@ -24,7 +24,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Enumeration;
 
-import static com.clone.team4.global.custom.CustomStaticMethodClass.setFailResponse;
 import static com.clone.team4.global.jwt.JwtUtil.ACCESS_HEADER;
 import static com.clone.team4.global.redis.AuthenticationRedisService.AuthenticationStringEnum.ACCESS_TOKEN;
 import static com.clone.team4.global.redis.AuthenticationRedisService.AuthenticationStringEnum.REFRESH_TOKEN;

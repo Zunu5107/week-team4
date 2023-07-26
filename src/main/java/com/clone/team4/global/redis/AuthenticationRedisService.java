@@ -1,6 +1,5 @@
 package com.clone.team4.global.redis;
 
-import com.clone.team4.domain.user.entity.UserRoleEnum;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
