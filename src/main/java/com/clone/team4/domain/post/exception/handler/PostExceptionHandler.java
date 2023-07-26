@@ -3,12 +3,10 @@ package com.clone.team4.domain.post.exception.handler;
 import com.clone.team4.domain.post.exception.PostNotFoundException;
 import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.exception.PermissionDeniedException;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import static org.slf4j.LoggerFactory.getLogger;
 

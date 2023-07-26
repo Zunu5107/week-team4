@@ -2,7 +2,6 @@ package com.clone.team4.domain.user.dto;
 
 import com.clone.team4.domain.user.dao.AccountContentDao;
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public class AccountInfoResponseDto {

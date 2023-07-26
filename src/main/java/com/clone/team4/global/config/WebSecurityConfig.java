@@ -64,6 +64,7 @@ public class WebSecurityConfig {
         JwtAuthorizationFilter filter = new JwtAuthorizationFilter(jwtUtil, userDetailsService);
         return filter;
     }
+
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider bean = new DaoAuthenticationProvider();
@@ -95,14 +96,10 @@ public class WebSecurityConfig {
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // resources 접근 허용 설정
-                        .requestMatchers("/api/auth/signup/**").permitAll() // '/api/users/'로 시작하는 요청 모두 접근 허가
-                        .requestMatchers("/api/auth/login/**").permitAll() // '/api/users/'로 시작하는 요청 모두 접근 허가
                         .requestMatchers("/api/auth/**").permitAll() // '/api/users/'로 시작하는 요청 모두 접근 허가
                         .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
-                        .requestMatchers("/api/food/result/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").permitAll() // '/api/users/'로 시작하는 요청 모두 접근 허가
                         .requestMatchers("/api/test/**").permitAll()
-                        .requestMatchers("/api/food/*/choice").permitAll()
-//                        .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/**").permitAll()
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
