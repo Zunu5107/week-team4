@@ -61,9 +61,15 @@ public class UserService {
     }
 
     public BaseResponseDto updateAccount(MultipartFile image, String nickname, String introduce, UserDetailsImpl userDetails) {
-        imageUploader.deletePostImage(userDetails.getAccountInfo().getProfileImage());
-        String profileImage = imageUploader.storeImage(image, ImageFolderEnum.PROFILE);
-        AccountContentDao setAccount = new AccountContentDao(introduce, profileImage, nickname);
+        AccountContentDao setAccount = null;
+        if(image != null){
+            imageUploader.deletePostImage(userDetails.getAccountInfo().getProfileImage());
+            String profileImage = imageUploader.storeImage(image, ImageFolderEnum.PROFILE);
+            setAccount = new AccountContentDao(introduce, profileImage, nickname);
+        }
+        else {
+            setAccount = new AccountContentDao(introduce, null, nickname);
+        }
         accountInfoRepository.updateAccountInfoContent(userDetails.getUser().getId(), setAccount);
 
         return BaseResponseDto.builder().status(200).msg("success").data(new AccountInfoResponseDto(setAccount)).build();
