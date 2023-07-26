@@ -24,6 +24,7 @@ public class CustomStatusException extends RuntimeException{
 
         public CustomStatusExceptionBuilder(String message) {
             this.result = new CustomStatusException(message);
+            this.result.status = HttpStatus.NOT_FOUND;
         }
 
         public CustomStatusExceptionBuilder status(int status){
