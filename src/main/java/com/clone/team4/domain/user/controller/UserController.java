@@ -47,11 +47,20 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity updateAccount(@RequestPart(value = "image", required = false) MultipartFile image,
-                                @RequestPart(value = "nickname", required = false) String nickname,
-                                @RequestPart(value = "introduce", required = false) String introduce,
-                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                        @RequestPart(value = "nickname", required = false) String nickname,
+                                        @RequestPart(value = "introduce", required = false) String introduce,
+                                        @RequestPart(value = "image", required = false) String image_string,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if(image_string != null)
+            log.info("image_string = " + image_string);
+        if(image != null)
+            log.info("image = " + image.getOriginalFilename());
+        if(nickname != null)
+            log.info("nickname = " + nickname);
+        if(introduce != null)
+            log.info("introduce = " + introduce);
         System.out.println("userDetails.getAccountInfo().getId() = " + userDetails.getAccountInfo().getId());
-        BaseResponseDto responseDto = userService.updateAccount(image, nickname, introduce, userDetails);
+        BaseResponseDto responseDto = userService.updateAccount(image, nickname, introduce, image_string, userDetails);
         return ResponseEntity.status(200).body(responseDto);
     }
 
