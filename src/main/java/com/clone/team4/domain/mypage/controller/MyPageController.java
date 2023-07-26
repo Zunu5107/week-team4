@@ -3,6 +3,7 @@ package com.clone.team4.domain.mypage.controller;
 import com.clone.team4.domain.mypage.dto.MyPageResponseDto;
 import com.clone.team4.domain.mypage.repository.MypageRepository;
 import com.clone.team4.global.dto.BaseResponseDto;
+import com.clone.team4.global.exception.CustomStatusException;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,8 @@ public class MyPageController {
     private final MypageRepository mypageRepository;
     @GetMapping("/mypage")
     public ResponseEntity getMyPage(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        if(userDetails == null)
+            throw CustomStatusException.builder("회원 정보가 존재하지 않습니다.").status(404).build();
 
         MyPageResponseDto result = new MyPageResponseDto();
         result.setIntroduce(userDetails.getAccountInfo().getIntroduce());

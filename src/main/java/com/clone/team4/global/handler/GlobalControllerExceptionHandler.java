@@ -5,6 +5,7 @@ import com.clone.team4.global.dto.ErrorResponseDto;
 import com.clone.team4.global.exception.CustomStatusException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,6 +17,9 @@ import static com.clone.team4.global.dto.BaseResponseDto.BaseMessageResponseDtoB
 @Slf4j
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler {
+
+    @Value("${custom.option.debug}")
+    public Boolean DEBUG_MODE;
     @ExceptionHandler(CustomStatusException.class)
     public ResponseEntity<BaseResponseDto> CustomStatusExceptionHandler(CustomStatusException exception){
         log.info("GlobalControllerExceptionHandler CustomStatusExceptionHandler");

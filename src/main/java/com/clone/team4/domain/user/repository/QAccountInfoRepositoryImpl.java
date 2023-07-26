@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.clone.team4.domain.user.entity.QAccountInfo.accountInfo;
+import static com.clone.team4.domain.user.entity.QUser.user;
 
 @Repository
 @RequiredArgsConstructor
@@ -23,4 +24,16 @@ public class QAccountInfoRepositoryImpl implements QAccountInfoRepository{
                 .where(accountInfo.id.eq(id))
                 .execute();
     }
+
+    @Override
+    public boolean findByEmailIsPresent(String email) {
+        return queryFactory.select(user.id).from(user).where(user.email.eq((email))).fetchFirst() != null;
+    }
+
+    @Override
+    public boolean findByNickNameIsPresent(String nickname) {
+        return queryFactory.select(accountInfo.id).from(accountInfo).where(accountInfo.nickname.eq((nickname))).fetchFirst() != null;
+    }
+
+
 }
