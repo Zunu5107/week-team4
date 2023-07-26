@@ -23,16 +23,6 @@ import static com.clone.team4.domain.user.entity.QAccountInfo.accountInfo;
 public class MypageRepository {
     private final JPAQueryFactory queryFactory;
 
-    public MyPageResponseDto findByMypageByAccountNickName(String nickname){
-        AccountInfo selectId = queryFactory.selectFrom(accountInfo).where(accountInfo.nickname.eq(nickname)).fetchFirst();
-        MyPageResponseDto result = new MyPageResponseDto();
-        result.setIntroduce(selectId.getIntroduce());
-        result.setNickname(selectId.getNickname());
-        result.setUserImage(selectId.getProfileImage());
-        result.setPostList(findByMyPost(selectId.getId()));
-        return result;
-    }
-
     public List<MyPagePostResponseDto> findByMyPost(Long userId){
         List<MyPagePostResponseDto> result = new ArrayList<>();
         List<Long> postList = queryFactory.select(post.id).from(post).where(post.accountInfo.id.eq(userId)).fetch();
