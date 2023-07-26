@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
@@ -22,8 +24,12 @@ public class MyPageController {
         result.setIntroduce(userDetails.getAccountInfo().getIntroduce());
         result.setNickname(userDetails.getAccountInfo().getNickname());
         result.setUserImage(userDetails.getAccountInfo().getProfileImage());
-        result.setPostList(mypageRepository.findByMyPost(userDetails.getAccountInfo().getId()));
-        result.setPostList(mypageRepository.findByMyLikePost(userDetails.getAccountInfo().getId()));
+        List MyPost = mypageRepository.findByMyPost(userDetails.getAccountInfo().getId());
+        if(MyPost.size() > 0)
+        result.setPostList(MyPost);
+        List Likelist = mypageRepository.findByMyLikePost(userDetails.getAccountInfo().getId());
+        if(Likelist.size() > 0)
+            result.setLikeList(Likelist);
         BaseResponseDto responseDto = BaseResponseDto.builder()
                 .msg("success")
                 .status(200)
