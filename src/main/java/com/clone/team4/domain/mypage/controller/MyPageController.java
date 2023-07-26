@@ -4,6 +4,7 @@ import com.clone.team4.domain.mypage.dto.MyPageResponseDto;
 import com.clone.team4.domain.mypage.repository.MypageRepository;
 import com.clone.team4.domain.mypage.service.MyPageService;
 import com.clone.team4.global.dto.BaseResponseDto;
+import com.clone.team4.global.exception.CustomStatusException;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

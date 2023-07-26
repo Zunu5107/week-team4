@@ -2,6 +2,8 @@ package com.clone.team4.domain.user.service;
 
 import com.clone.team4.domain.user.dao.AccountContentDao;
 import com.clone.team4.domain.user.dto.AccountInfoResponseDto;
+import com.clone.team4.domain.user.dto.CheckEmailRequestDto;
+import com.clone.team4.domain.user.dto.CheckNicknameRequestDto;
 import com.clone.team4.domain.user.dto.SignupRequestDto;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.domain.user.entity.User;
@@ -65,6 +67,18 @@ public class UserService {
         accountInfoRepository.updateAccountInfoContent(userDetails.getUser().getId(), setAccount);
 
         return BaseResponseDto.builder().status(200).msg("success").data(new AccountInfoResponseDto(setAccount)).build();
+    }
+
+    public <T> BaseResponseDto updateAccount(T requestDto) {
+        if(requestDto instanceof CheckEmailRequestDto)
+            return accountInfoRepository.findByEmailIsPresent(((CheckEmailRequestDto) requestDto).getEmail()) ?
+                    BaseResponseDto.builder().status(409).msg("이메일 중복").build() :
+                    BaseResponseDto.builder().status(200).msg("success").build();
+        if(requestDto instanceof CheckNicknameRequestDto)
+            return accountInfoRepository.findByNickNameIsPresent(((CheckNicknameRequestDto) requestDto).getNickname()) ?
+                    BaseResponseDto.builder().status(409).msg("닉네임 중복").build() :
+                    BaseResponseDto.builder().status(200).msg("success").build();
+        return BaseResponseDto.builder().status(404).msg("잘못된 정보 입력").build();
     }
 }
 

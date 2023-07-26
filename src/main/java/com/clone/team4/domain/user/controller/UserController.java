@@ -1,5 +1,7 @@
 package com.clone.team4.domain.user.controller;
 
+import com.clone.team4.domain.user.dto.CheckEmailRequestDto;
+import com.clone.team4.domain.user.dto.CheckNicknameRequestDto;
 import com.clone.team4.domain.user.dto.SignupRequestDto;
 import com.clone.team4.domain.user.service.UserService;
 import com.clone.team4.global.dto.BaseResponseDto;
@@ -29,6 +31,18 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity createAccount(@RequestBody @Valid SignupRequestDto requestDto) {
         return userService.createAccount(requestDto);
+    }
+
+    @PostMapping("/signup/email")
+    public ResponseEntity checkEmail(@RequestBody @Valid CheckEmailRequestDto requestDto) {
+        BaseResponseDto responseDto = userService.updateAccount(requestDto);
+        return ResponseEntity.status(Integer.parseInt(responseDto.getStatus())).body(responseDto);
+    }
+
+    @PostMapping("/signup/nickname")
+    public ResponseEntity checkNickname(@RequestBody @Valid CheckNicknameRequestDto requestDto) {
+        BaseResponseDto responseDto = userService.updateAccount(requestDto);
+        return ResponseEntity.status(Integer.parseInt(responseDto.getStatus())).body(responseDto);
     }
 
     @PutMapping("/update")
