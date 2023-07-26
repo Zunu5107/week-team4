@@ -36,7 +36,7 @@ public class Comment extends Timestamped {
     @JoinColumn(name="post_id")
     private Post post;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="accountInfo_id")
     public AccountInfo accountInfo;
 
