@@ -61,21 +61,20 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public BaseResponseDto<?> getPostById(Long postId) {
-        BaseResponseDto<?> response = null;
-        try {
-            Post post = findById(postId);
 
-            List<PostDetailsResponseDto> postDetailsResponseDtos = postDetailsRepository.findAllByPostId(postId).stream()
-                    .map(PostDetailsResponseDto::new).toList();
-
-            PostInfoResponseDto data = new PostInfoResponseDto(post, postDetailsResponseDtos);
-
-            response = new BaseResponseDto<>(HttpStatus.OK.toString(), "게시글 조회 성공", data);
-            return response;
-        } catch (IllegalArgumentException e) {
-            response = new BaseResponseDto<>(HttpStatus.BAD_REQUEST.toString(), e.getMessage(), null);
-            return response;
+        Post post = findById(postId);
+        if (post.getDeletedAt() != null) {
+            throw new IllegalArgumentException("삭제된 게시물 입니다.");
         }
+
+        List<PostDetailsResponseDto> postDetailsResponseDtos = postDetailsRepository.findAllByPostId(postId).stream()
+                .map(PostDetailsResponseDto::new)
+                .toList();
+
+        PostInfoResponseDto data = new PostInfoResponseDto(post, postDetailsResponseDtos);
+
+        BaseResponseDto<?> response = new BaseResponseDto<>(HttpStatus.OK.toString(), "게시글 조회 성공", data);
+        return response;
     }
 
     // 게시글 생성
