@@ -60,19 +60,21 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(new CustomStatusResponseDto(true));
     }
 
-    public BaseResponseDto updateAccount(MultipartFile image, String nickname, String introduce, UserDetailsImpl userDetails) {
+
+    public BaseResponseDto updateAccount(MultipartFile image, String nickname, String introduce, String image_string, UserDetailsImpl userDetails) {
         AccountContentDao setAccount = null;
         if(image != null){
-            imageUploader.deletePostImage(userDetails.getAccountInfo().getProfileImage());
+            if(userDetails.getAccountInfo().getProfileImage() != null)
+                imageUploader.deletePostImage(userDetails.getAccountInfo().getProfileImage());
             String profileImage = imageUploader.storeImage(image, ImageFolderEnum.PROFILE);
             setAccount = new AccountContentDao(introduce, profileImage, nickname);
         }
         else {
-            setAccount = new AccountContentDao(introduce, null, nickname);
+            setAccount = new AccountContentDao(introduce, image_string, nickname);
         }
         accountInfoRepository.updateAccountInfoContent(userDetails.getUser().getId(), setAccount);
 
-        return BaseResponseDto.builder().status(200).msg("success").data(new AccountInfoResponseDto(setAccount)).build();
+        return BaseResponseDto.builder().status(200).msg("success").data(new AccountInfoResponseDto(userDetails.getAccountInfo(), setAccount)).build();
     }
 
     public <T> BaseResponseDto updateAccount(T requestDto) {

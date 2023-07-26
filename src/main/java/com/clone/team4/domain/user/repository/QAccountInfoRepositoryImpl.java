@@ -2,6 +2,7 @@ package com.clone.team4.domain.user.repository;
 
 import com.clone.team4.domain.user.dao.AccountContentDao;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,12 +18,14 @@ public class QAccountInfoRepositoryImpl implements QAccountInfoRepository{
     @Override
     @Transactional
     public void updateAccountInfoContent(Long id, AccountContentDao contentDao) {
-        queryFactory.update(accountInfo)
-                .set(accountInfo.introduce, contentDao.getIntroduce())
-                .set(accountInfo.profileImage, contentDao.getProfileImage())
-                .set(accountInfo.nickname, contentDao.getNickname())
-                .where(accountInfo.id.eq(id))
-                .execute();
+        JPAUpdateClause jpaUpdateClause =  queryFactory.update(accountInfo);
+        if(contentDao.getIntroduce() != null)
+            jpaUpdateClause.set(accountInfo.introduce, contentDao.getIntroduce());
+        if(contentDao.getProfileImage() != null)
+            jpaUpdateClause.set(accountInfo.profileImage, contentDao.getProfileImage());
+        if(contentDao.getNickname() != null)
+            jpaUpdateClause.set(accountInfo.nickname, contentDao.getNickname());
+        jpaUpdateClause.where(accountInfo.id.eq(id)).execute();
     }
 
     @Override

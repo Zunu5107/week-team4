@@ -54,6 +54,7 @@ public class UserController {
         if(userDetails == null)
             throw new InsufficientAuthenticationException("회원 정보가 존재하지 않습니다.");
         BaseResponseDto responseDto = userService.updateAccount(image, nickname, introduce, userDetails);
+
         return ResponseEntity.status(200).body(responseDto);
     }
 
