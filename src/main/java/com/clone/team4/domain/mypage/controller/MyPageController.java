@@ -24,6 +24,8 @@ public class MyPageController {
     private final MyPageService myPageService;
     @GetMapping("/mypage")
     public ResponseEntity<?> getMyPage(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        if(userDetails == null)
+            throw CustomStatusException.builder("회원 정보가 존재하지 않습니다.").status(404).build();
         BaseResponseDto<?> responseDto = myPageService.getMyPage(userDetails.getAccountInfo());
         return ResponseEntity.status(Integer.parseInt(responseDto.getStatus())).body(responseDto);
     }

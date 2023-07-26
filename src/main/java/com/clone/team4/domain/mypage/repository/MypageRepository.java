@@ -25,7 +25,7 @@ public class MypageRepository {
 
     public List<MyPagePostResponseDto> findByMyPost(Long userId){
         List<MyPagePostResponseDto> result = new ArrayList<>();
-        List<Long> postList = queryFactory.select(post.id).from(post).where(post.accountInfo.id.eq(userId)).fetch();
+        List<Long> postList = queryFactory.select(post.id).from(post).where(post.accountInfo.id.eq(userId),post.deletedAt.isNull()).fetch();
         for (Long aLong : postList) {
             log.info(aLong.toString());
             result.add(new MyPagePostResponseDto(aLong, findByPostImageById(aLong)));
@@ -35,7 +35,7 @@ public class MypageRepository {
 
     public List<MyPagePostResponseDto> findByMyLikePost(Long userId){
         List<MyPagePostResponseDto> result = new ArrayList<>();
-        List<Long> postList = queryFactory.select(like.post.id).from(like).where(like.accountInfo.id.eq(userId)).fetch();
+        List<Long> postList = queryFactory.select(like.post.id).from(like).where(like.accountInfo.id.eq(userId),like.post.deletedAt.isNull()).fetch();
         for (Long aLong : postList) {
             result.add(new MyPagePostResponseDto(aLong, findByPostImageById(aLong)));
         }
