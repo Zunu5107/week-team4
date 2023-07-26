@@ -133,7 +133,7 @@ public class PostService {
         return new BaseResponseDto(HttpStatus.OK.toString(), "게시글 삭제 성공",null);
     }
 
-    private Post findById(Long postId) {
+    public Post findById(Long postId) {
        return postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("해당하는 포스트가 없습니다."));
     }

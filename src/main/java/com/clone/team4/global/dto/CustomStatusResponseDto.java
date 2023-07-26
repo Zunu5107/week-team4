@@ -9,8 +9,4 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CustomStatusResponseDto {
     private boolean status;
-
-    public CustomStatusResponseDto(boolean status){
-        this.status =status;
-    }
 }

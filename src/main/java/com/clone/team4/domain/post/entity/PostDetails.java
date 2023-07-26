@@ -21,7 +21,7 @@ public class PostDetails {
     @Column(name = "image", nullable = false)
     private String image;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = true)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)

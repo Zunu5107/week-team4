@@ -1,15 +1,15 @@
 package com.clone.team4.domain.comment.entity;
 
-
 import com.clone.team4.domain.comment.dto.CommentRequestDto;
 import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.domain.user.entity.AccountInfo;
-import com.clone.team4.domain.user.entity.User;
 import com.clone.team4.global.entity.Timestamped;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -27,7 +27,7 @@ public class Comment extends Timestamped {
     @JoinColumn(name="post_id")
     private Post post;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="accountInfo_id")
     public AccountInfo accountInfo;
 
@@ -40,6 +40,7 @@ public class Comment extends Timestamped {
 
     public void update(CommentRequestDto requestDto){
         this.comment = requestDto.getComment();
+        this.modifiedAt = LocalDateTime.now();
     }
 
 //    private String nickname(AccountInfo accountInfo){

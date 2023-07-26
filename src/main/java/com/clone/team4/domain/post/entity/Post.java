@@ -19,7 +19,7 @@ public class Post extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED")
-    private Long postId;
+    private Long id;
 
     @Column(name = "category", nullable = false)
     private String category;

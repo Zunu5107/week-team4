@@ -1,6 +1,5 @@
 package com.clone.team4.global.jwt;
 
-
 import com.clone.team4.domain.user.entity.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
