@@ -1,12 +1,14 @@
 package com.clone.team4.domain.user.repository;
 
-import com.clone.team4.domain.user.dao.AccountContentDao;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import lombok.RequiredArgsConstructor;
+import static com.clone.team4.domain.user.entity.QAccountInfo.*;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.clone.team4.domain.user.entity.QAccountInfo.accountInfo;
+import com.clone.team4.domain.user.dao.AccountContentDao;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
