@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -86,7 +88,9 @@ public class S3ImageUploader {
         // 이미지 삭제에 실패해도 게시글 수정 작업은 실패하면 안된다.
         for (String image : imageList) {
             try {
-                amazonS3.deleteObject(bucket, image);
+                log.info("imageName = {}", image);
+                String deleteFileName = createDeleteFileName(image);
+                amazonS3.deleteObject(bucket, deleteFileName);
             } catch (RuntimeException e) {
                 log.error("삭제 실패 파일명 = {}", image, e);
             }
@@ -100,6 +104,14 @@ public class S3ImageUploader {
         } catch (RuntimeException e) {
             log.error("삭제 실패 파일명 = {}", image, e);
         }
+    }
+
+    private String createDeleteFileName(String image){
+        int startIndex = image.indexOf(".com/") + 5;
+        String extractedString = image.substring(startIndex);
+        String deleteFileName = URLDecoder.decode(extractedString, StandardCharsets.UTF_8).toString();
+        log.info("extractedString = {}" , deleteFileName);
+        return deleteFileName;
     }
 
     private ObjectMetadata createObjectMetadata(MultipartFile multipartFile) {
