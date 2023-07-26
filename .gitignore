@@ -35,3 +35,5 @@ out/
 /src/main/resources/application-secret.yml
 /src/test/java/com/clone/team4/
 /src/main/resources/META-INF/
+/src/main/java/com/clone/team4/domain/test/
+/src/main/java/com/clone/team4/global/config/HikariDatabase.java
