@@ -1,7 +1,6 @@
 package com.clone.team4.global.handler;
 
 import com.clone.team4.global.dto.BaseResponseDto;
-import com.clone.team4.global.dto.ErrorResponseDto;
 import com.clone.team4.global.exception.CustomStatusException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpStatus;
@@ -23,7 +22,6 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(CustomStatusException.class)
     public ResponseEntity<BaseResponseDto> CustomStatusExceptionHandler(CustomStatusException exception){
         log.info("GlobalControllerExceptionHandler CustomStatusExceptionHandler");
-        ErrorResponseDto errorResponseDto = new ErrorResponseDto(exception.getStatus().value(), exception.getMessage());
         BaseResponseDto responseDto = BaseResponseDto.MessageBuilder()
                 .status(exception.getStatus().value())
                 .msg(exception.getStatus().name())

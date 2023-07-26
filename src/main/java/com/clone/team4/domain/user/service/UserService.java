@@ -60,6 +60,7 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.CREATED.value()).body(new CustomStatusResponseDto(true));
     }
 
+
     public BaseResponseDto updateAccount(MultipartFile image, String nickname, String introduce, String image_string, UserDetailsImpl userDetails) {
         AccountContentDao setAccount = null;
         if(image != null){

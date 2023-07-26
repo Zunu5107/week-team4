@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,20 +48,13 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity updateAccount(@RequestPart(value = "image", required = false) MultipartFile image,
-                                        @RequestPart(value = "nickname", required = false) String nickname,
-                                        @RequestPart(value = "introduce", required = false) String introduce,
-                                        @RequestPart(value = "image", required = false) String image_string,
-                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(image_string != null)
-            log.info("image_string = " + image_string);
-        if(image != null)
-            log.info("image = " + image.getOriginalFilename());
-        if(nickname != null)
-            log.info("nickname = " + nickname);
-        if(introduce != null)
-            log.info("introduce = " + introduce);
-        System.out.println("userDetails.getAccountInfo().getId() = " + userDetails.getAccountInfo().getId());
-        BaseResponseDto responseDto = userService.updateAccount(image, nickname, introduce, image_string, userDetails);
+                                @RequestPart(value = "nickname", required = false) String nickname,
+                                @RequestPart(value = "introduce", required = false) String introduce,
+                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if(userDetails == null)
+            throw new InsufficientAuthenticationException("회원 정보가 존재하지 않습니다.");
+        BaseResponseDto responseDto = userService.updateAccount(image, nickname, introduce, userDetails);
+
         return ResponseEntity.status(200).body(responseDto);
     }
 
