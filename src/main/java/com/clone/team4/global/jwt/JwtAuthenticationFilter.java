@@ -78,6 +78,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .msg("success")
                 .addMessage("nickname", accountInfo.getNickname())
                 .addMessage("userImage", accountInfo.getProfileImage())
+                .addMessage("introduce", accountInfo.getIntroduce())
                 .build();
 
         String str = objectMapper.writeValueAsString(responseDto);
