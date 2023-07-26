@@ -4,6 +4,7 @@ import com.clone.team4.global.filter.CustomAuthenticationEntryPoint;
 import com.clone.team4.global.jwt.JwtAuthenticationFilter;
 import com.clone.team4.global.jwt.JwtAuthorizationFilter;
 import com.clone.team4.global.jwt.JwtUtil;
+import com.clone.team4.global.redis.AuthenticationRedisService;
 import com.clone.team4.global.sercurity.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -32,17 +33,20 @@ public class WebSecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final AuthenticationRedisService authenticationRedisService;
 
 
     @Autowired
     public WebSecurityConfig(JwtUtil jwtUtil, CorsConfig corsConfig,
                              PasswordEncoder passwordEncoder,
                              UserDetailsServiceImpl userDetailsService,
+                             AuthenticationRedisService authenticationRedisService,
                              AuthenticationConfiguration authenticationConfiguration) {
         this.jwtUtil = jwtUtil;
         this.corsConfig = corsConfig;
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
+        this.authenticationRedisService = authenticationRedisService;
         this.authenticationConfiguration = authenticationConfiguration;
     }
 
@@ -60,7 +64,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() {
-        JwtAuthorizationFilter filter = new JwtAuthorizationFilter(jwtUtil, userDetailsService);
+        JwtAuthorizationFilter filter = new JwtAuthorizationFilter(jwtUtil, userDetailsService, authenticationRedisService);
         return filter;
     }
 
@@ -109,7 +113,7 @@ public class WebSecurityConfig {
         // exceptionHandling 처리
         http.exceptionHandling((httpSecurityExceptionHandlingConfigurer) ->
                 httpSecurityExceptionHandlingConfigurer
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint(authenticationRedisService)));
 
         //http.cors().configurationSource(corsConfigurationSource()) //---------- (1)
         http.addFilterBefore(corsConfig.corsFilter(), JwtAuthenticationFilter.class); // SPRING 3.0

@@ -8,6 +8,7 @@ import com.clone.team4.global.exception.CustomStatusException;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,7 @@ public class MyPageController {
     @GetMapping("/mypage")
     public ResponseEntity<?> getMyPage(@AuthenticationPrincipal UserDetailsImpl userDetails){
         if(userDetails == null)
-            throw CustomStatusException.builder("회원 정보가 존재하지 않습니다.").status(404).build();
+            throw new InsufficientAuthenticationException("회원 정보가 존재하지 않습니다.");
         BaseResponseDto<?> responseDto = myPageService.getMyPage(userDetails.getAccountInfo());
         return ResponseEntity.status(Integer.parseInt(responseDto.getStatus())).body(responseDto);
     }

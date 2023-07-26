@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,7 +51,8 @@ public class UserController {
                                 @RequestPart(value = "nickname", required = false) String nickname,
                                 @RequestPart(value = "introduce", required = false) String introduce,
                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        System.out.println("userDetails.getAccountInfo().getId() = " + userDetails.getAccountInfo().getId());
+        if(userDetails == null)
+            throw new InsufficientAuthenticationException("회원 정보가 존재하지 않습니다.");
         BaseResponseDto responseDto = userService.updateAccount(image, nickname, introduce, userDetails);
         return ResponseEntity.status(200).body(responseDto);
     }

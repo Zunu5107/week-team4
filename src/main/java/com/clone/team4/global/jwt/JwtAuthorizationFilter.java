@@ -2,6 +2,7 @@ package com.clone.team4.global.jwt;
 
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.global.dto.ErrorLoginMessageDto;
+import com.clone.team4.global.redis.AuthenticationRedisService;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
 import com.clone.team4.global.sercurity.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
@@ -25,6 +26,8 @@ import java.util.Enumeration;
 
 import static com.clone.team4.global.custom.CustomStaticMethodClass.setFailResponse;
 import static com.clone.team4.global.jwt.JwtUtil.ACCESS_HEADER;
+import static com.clone.team4.global.redis.AuthenticationRedisService.AuthenticationStringEnum.ACCESS_TOKEN;
+import static com.clone.team4.global.redis.AuthenticationRedisService.AuthenticationStringEnum.REFRESH_TOKEN;
 
 @Slf4j(topic = "JWT 검증 및 인가")
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
@@ -34,9 +37,12 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
 
-    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService) {
+    private final AuthenticationRedisService authenticationRedisService;
+
+    public JwtAuthorizationFilter(JwtUtil jwtUtil, UserDetailsServiceImpl userDetailsService, AuthenticationRedisService authenticationRedisService) {
         this.jwtUtil = jwtUtil;
         this.userDetailsService = userDetailsService;
+        this.authenticationRedisService = authenticationRedisService;
     }
 
     @Override
@@ -78,19 +84,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     log.error("AccessToken Error");
                     return;
                 }
-            } catch (Exception e) {
-                exceptionHandlerAccess(res, e);
-                return;
-            }
 
-            log.info("Vaildate Correct");
-            Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
+                log.info("Vaildate Correct");
+                Claims info = jwtUtil.getUserInfoFromToken(tokenValue);
 
-            try {
                 setAuthentication(info.getSubject());
+
             } catch (Exception e) {
                 exceptionHandler(res, e);
-                return;
             }
         }
         else if (StringUtils.hasText(tokenValueRefresh)) {
@@ -99,15 +100,14 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 GetRefreshToken(req, res, tokenValueRefresh);
             } catch (Exception e) {
                 exceptionHandlerRefresh(res, e);
-                return;
             }
         }
         else{
             log.info("AccessTokenDenide");
-            res.addHeader("AccessTokenDenide","true");
         }
         filterChain.doFilter(req, res);
-
+        authenticationRedisService.deleteKey(ACCESS_TOKEN.getAuthenticationString());
+        authenticationRedisService.deleteKey(REFRESH_TOKEN.getAuthenticationString());
     }
 
     private void GetRefreshToken(HttpServletRequest req, HttpServletResponse res, String tokenValue) throws IOException{
@@ -183,7 +183,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             messageDto.setMessage("Not Found JWT.");
         } else if (Debug)
             messageDto.setMessage(exception.getClass().getCanonicalName()); // Debug
-        setFailResponse(response, messageDto);
+//        setFailResponse(response, messageDto);
+        authenticationRedisService.setValues(ACCESS_TOKEN.getAuthenticationString(), messageDto.getMessage());
     }
 
     private void exceptionHandlerRefresh(HttpServletResponse response, Exception exception) throws IOException {
@@ -202,7 +203,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }else if (Debug)
             messageDto.setMessage(exception.getClass().getCanonicalName()); // Debug
         messageDto.setRefreshValidationError(true);
-        setFailResponse(response, messageDto);
+        authenticationRedisService.setValues(REFRESH_TOKEN.getAuthenticationString(), messageDto.getMessage());
     }
 
     private void exceptionHandlerAccess(HttpServletResponse response, Exception exception) throws IOException {
@@ -219,7 +220,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         } else if (Debug)
             messageDto.setMessage(exception.getClass().getCanonicalName()); // Debug
         messageDto.setAccessValidationError(true);
-        setFailResponse(response, messageDto);
+        authenticationRedisService.setValues(ACCESS_TOKEN.getAuthenticationString(), messageDto.getMessage());
     }
 
 
