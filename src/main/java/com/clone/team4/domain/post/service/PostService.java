@@ -128,7 +128,10 @@ public class PostService {
         if (!postServiceHelper.hasRole(accountInfo, isPostOwner))
             throw new PermissionDeniedException("권한이 없습니다.");
 
+        List<String> savedImages = postDetailsRepository.getPostImages(postId);
         postRepository.deletePost(postId, accountInfo);
+        s3ImageUploader.deletePostImages(savedImages);
+
         return new BaseResponseDto(HttpStatus.OK.toString(), "게시글 삭제 성공",null);
     }
 
