@@ -62,6 +62,6 @@ public class Post extends Timestamped {
     }
 
 
-    //    @OneToMany(fetch = FetchType.LAZY)
+//    @OneToMany(fetch = FetchType.LAZY)
 //    private List<Comment> comments = new ArrayList<>();
 }
