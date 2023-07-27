@@ -10,9 +10,11 @@ import com.clone.team4.domain.comment.entity.CommentLike;
 import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.domain.post.service.PostService;
 import com.clone.team4.domain.user.entity.AccountInfo;
+import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
@@ -25,32 +27,36 @@ public class CommentService {
     private final CommentLikeRepository commentLikeRepository;
     private final PostService postService;
 
-    public ResponseEntity<?> createComment(Long postId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+    public ResponseEntity<?> createComment(Long postId, CommentRequestDto requestDto, UserDetailsImpl userDetails){
         AccountInfo targetAccountInfo = userDetails.getAccountInfo();
         Post targetPost = postService.findById(postId);
-        if (targetPost == null)
+        if(targetPost == null)
             return ResponseEntity.noContent().build();
         Comment comment = new Comment(requestDto, targetPost, targetAccountInfo);
-        return ResponseEntity.ok(new CommentResponseDto(comment));
+        commentRepository.save(comment);
+        BaseResponseDto<?> response = new BaseResponseDto<>(HttpStatus.CREATED.toString(), "댓글 작성 성공", null);
+        return ResponseEntity.ok(response);
     }
 
     //<댓글 수정>
     @Transactional
-    public ResponseEntity<?> updateComment(Long postId, Long commentId, CommentRequestDto requestDto, UserDetailsImpl userDetails) {
+    public ResponseEntity<?> updateComment(Long postId, Long commentId, CommentRequestDto requestDto, UserDetailsImpl userDetails){
         Comment targetComment = findComment(postId, commentId);
         AccountInfo targetAccountInfo = userDetails.getAccountInfo();
-        checkAuthority(targetComment, targetAccountInfo);
+        checkAuthority(targetComment, targetAccountInfo );
         targetComment.update(requestDto);
-        return ResponseEntity.ok(new CommentResponseDto(targetComment));
+        BaseResponseDto<?> response = new BaseResponseDto<>(HttpStatus.OK.toString(), "댓글 수정 성공", null);
+        return ResponseEntity.ok(response);
     }
 
     //<댓글 삭제>
-    public ResponseEntity<?> deleteComment(Long postId, Long commentId, UserDetailsImpl userDetails) {
+    public ResponseEntity<?> deleteComment(Long postId, Long commentId, UserDetailsImpl userDetails){
         Comment targetComment = findComment(postId, commentId);
         AccountInfo targetAccountInfo = userDetails.getAccountInfo();
-        checkAuthority(targetComment, targetAccountInfo);
+        checkAuthority(targetComment, targetAccountInfo );
         commentRepository.delete(targetComment);
-        return ResponseEntity.ok("삭제가 완료되었습니다");
+        BaseResponseDto<?> response = new BaseResponseDto<>(HttpStatus.OK.toString(), "댓글 삭제 성공", null);
+        return  ResponseEntity.ok(response);
     }
 
     //<댓글 좋아요>
@@ -71,16 +77,16 @@ public class CommentService {
     }
 
     //<댓글 찾기>
-    public Comment findComment(Long postId, Long commentId) {
+    public Comment findComment(Long postId, Long commentId){
         postService.findById(postId);
-        return commentRepository.findByIdAndPostId(postId, commentId).orElseThrow(() ->
+        return commentRepository.findByIdAndPostId(postId, commentId).orElseThrow(()->
                 new NullPointerException("댓글이 존재하지 않습니다."));
     }
 
     //<댓글 수정 권한 확인>
-    public void checkAuthority(Comment comment, AccountInfo accountInfo) {
-        if (!accountInfo.getRole().getAuthority().equals("ROLE_ADMIN")) {
-            if (!comment.getAccountInfo().getId().equals(accountInfo.getId())) {
+    public void checkAuthority(Comment comment, AccountInfo accountInfo){
+        if(!accountInfo.getRole().getAuthority().equals("ROLE_ADMIN")){
+            if(!comment.getAccountInfo().getId().equals(accountInfo.getId())){
                 throw new AuthorizationServiceException("수정 권한이 없습니다.");
             }
         }
