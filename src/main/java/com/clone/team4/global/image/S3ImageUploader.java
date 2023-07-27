@@ -87,20 +87,16 @@ public class S3ImageUploader {
     public void deletePostImages(List<String> imageList) {
         // 이미지 삭제에 실패해도 게시글 수정 작업은 실패하면 안된다.
         for (String image : imageList) {
-            try {
-                log.info("imageName = {}", image);
-                String deleteFileName = createDeleteFileName(image);
-                amazonS3.deleteObject(bucket, deleteFileName);
-            } catch (RuntimeException e) {
-                log.error("삭제 실패 파일명 = {}", image, e);
-            }
+            deletePostImage(image);
         }
     }
 
     @Async
     public void deletePostImage(String image){
         try {
-            amazonS3.deleteObject(bucket, image);
+            log.info("imageName = {}", image);
+            String deleteFileName = createDeleteFileName(image);
+            amazonS3.deleteObject(bucket, deleteFileName);
         } catch (RuntimeException e) {
             log.error("삭제 실패 파일명 = {}", image, e);
         }
