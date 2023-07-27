@@ -1,15 +1,14 @@
 package com.clone.team4.domain.post.dto;
 
-import com.clone.team4.domain.comment.dto.CommentResponseDto;
-import com.clone.team4.domain.post.entity.Post;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.clone.team4.domain.comment.dto.CommentResponseDto;
+import com.clone.team4.domain.post.entity.Post;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -23,7 +22,7 @@ public class PostInfoResponseDto {
     private Long likeCount;
     private boolean isLike = false;
     private List<PostDetailsResponseDto> postDetails = new ArrayList<>();
-    private List<CommentResponseDto> commnets = new ArrayList<>();
+    private List<CommentResponseDto> comments = new ArrayList<>();
 
     public PostInfoResponseDto(Post post,
                                List<PostDetailsResponseDto> postDetails,
@@ -35,6 +34,6 @@ public class PostInfoResponseDto {
         this.category = post.getCategory();
         this.likeCount = post.getLikeCount();
         this.postDetails = postDetails;
-        this.commnets = commentList;
+        this.comments = commentList;
     }
 }
