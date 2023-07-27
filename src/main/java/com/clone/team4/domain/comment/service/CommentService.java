@@ -1,8 +1,12 @@
 package com.clone.team4.domain.comment.service;
 
+
 import com.clone.team4.domain.comment.dto.CommentRequestDto;
+import com.clone.team4.domain.comment.dto.CommentResponseDto;
 import com.clone.team4.domain.comment.entity.Comment;
+import com.clone.team4.domain.comment.repository.CommentLikeRepository;
 import com.clone.team4.domain.comment.repository.CommentRepository;
+import com.clone.team4.domain.comment.entity.CommentLike;
 import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.domain.post.service.PostService;
 import com.clone.team4.domain.user.entity.AccountInfo;
@@ -20,6 +24,7 @@ import org.springframework.stereotype.Service;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
     private final PostService postService;
 
     public ResponseEntity<?> createComment(Long postId, CommentRequestDto requestDto, UserDetailsImpl userDetails){
@@ -54,14 +59,31 @@ public class CommentService {
         return  ResponseEntity.ok(response);
     }
 
-//<댓글 찾기>
+    //<댓글 좋아요>
+    public ResponseEntity<?> commentLike(Long postId, Long commentId, UserDetailsImpl userDetails) {
+        // 댓글 유무 확인
+        Comment targetComment = findComment(postId, commentId);
+        AccountInfo targetAccountInfo = userDetails.getAccountInfo();
+        CommentLike checkCommentLike = commentLikeRepository.findByCommentAndAccountInfo(targetComment, targetAccountInfo)
+                .orElse(null);
+        if (checkCommentLike == null) {
+            CommentLike commentLike = new CommentLike(targetAccountInfo, targetComment);
+            commentLikeRepository.save(commentLike);
+            return ResponseEntity.ok("좋아요 성공");
+        } else {
+            commentLikeRepository.delete(checkCommentLike);
+            return ResponseEntity.ok("좋아요 취소");
+        }
+    }
+
+    //<댓글 찾기>
     public Comment findComment(Long postId, Long commentId){
         postService.findById(postId);
         return commentRepository.findByIdAndPostId(postId, commentId).orElseThrow(()->
                 new NullPointerException("댓글이 존재하지 않습니다."));
     }
 
-//<댓글 수정 권한 확인>
+    //<댓글 수정 권한 확인>
     public void checkAuthority(Comment comment, AccountInfo accountInfo){
         if(!accountInfo.getRole().getAuthority().equals("ROLE_ADMIN")){
             if(!comment.getAccountInfo().getId().equals(accountInfo.getId())){
@@ -69,12 +91,4 @@ public class CommentService {
             }
         }
     }
-
-//        //<댓글 수정>
-//    Comment targetComment = findComment(postId, commentId);
-//        if(targetComment.getAccountInfo().getId() != userDetails.getAccountInfo().getId()) // comment id가 같지 않으면
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED.value()).build(); // 인증되지 않았다고 돌려줌
-//        // 아니면 여기부터 다시 진행
-//        Comment comment = new Comment(requestDto, targetPost, accountInfo);
-//        return ResponseEntity.ok(new CommentResponseDto());
 }

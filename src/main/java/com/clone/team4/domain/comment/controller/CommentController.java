@@ -2,9 +2,11 @@ package com.clone.team4.domain.comment.controller;
 
 import com.clone.team4.domain.comment.dto.CommentRequestDto;
 import com.clone.team4.domain.comment.service.CommentService;
+import com.clone.team4.domain.user.entity.User;
 import com.clone.team4.global.sercurity.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -37,4 +39,13 @@ public class CommentController {
                                                                  @AuthenticationPrincipal UserDetailsImpl userDetails){
         return commentService.deleteComment(postId, commentId, userDetails);
     }
+
+    @PostMapping("/{commentId}/like")
+    public ResponseEntity<?> commentLike(@PathVariable Long postId,
+                                                         @PathVariable Long commentId,
+                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return  commentService.commentLike(postId, commentId, userDetails);
+    }
+
+
 }
