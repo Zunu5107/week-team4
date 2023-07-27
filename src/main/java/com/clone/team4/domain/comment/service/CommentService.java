@@ -79,7 +79,7 @@ public class CommentService {
     //<댓글 찾기>
     public Comment findComment(Long postId, Long commentId){
         postService.findById(postId);
-        return commentRepository.findByIdAndPostId(postId, commentId).orElseThrow(()->
+        return commentRepository.findByIdAndPostId(commentId, postId).orElseThrow(()->
                 new NullPointerException("댓글이 존재하지 않습니다."));
     }
 
