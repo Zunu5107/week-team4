@@ -70,7 +70,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public BaseResponseDto<?> getPostById(Long postId, AccountInfo accountInfo) {
+    public BaseResponseDto<?> getPostById(Long postId, UserDetailsImpl userDetails) {
 
         Post post = findById(postId);
 
@@ -87,7 +87,11 @@ public class PostService {
                 .toList();
 
         PostInfoResponseDto postInfoDto = new PostInfoResponseDto(post, postDetailsResponseDtos, commentResponseDtos);
-        postInfoDto.setLike(isLike(postId, accountInfo.getId()));
+
+        if (userDetails != null) {
+            boolean like = isLike(postId, userDetails.getAccountInfo().getId());
+            postInfoDto.setLike(like);
+        }
 
         BaseResponseDto<?> response = new BaseResponseDto<>(HttpStatus.OK.toString(), "게시글 조회 성공", postInfoDto);
         return response;
