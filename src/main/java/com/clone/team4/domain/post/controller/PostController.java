@@ -26,7 +26,7 @@ public class PostController implements PostExceptionHandler {
     private final PostService postService;
 
     @GetMapping("/posts")
-    public ResponseEntity<PageDto> getPostsByCategory(@ModelAttribute PageParam pageParam){
+    public ResponseEntity<BaseResponseDto> getPostsByCategory(@ModelAttribute PageParam pageParam){
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPosts(pageParam));
     }
 
