@@ -2,7 +2,8 @@ package com.clone.team4.domain.post.service;
 
 import com.amazonaws.util.StringUtils;
 import com.clone.team4.domain.comment.dto.CommentResponseDto;
-import com.clone.team4.domain.comment.entity.Comment;
+import com.clone.team4.domain.comment.entity.CommentLike;
+import com.clone.team4.domain.comment.repository.CommentLikeRepository;
 import com.clone.team4.domain.comment.repository.CommentRepository;
 import com.clone.team4.domain.like.entity.Like;
 import com.clone.team4.domain.like.repository.LikeRepository;
@@ -13,7 +14,6 @@ import com.clone.team4.domain.post.exception.PostNotFoundException;
 import com.clone.team4.domain.post.repository.PostDetailsRepository;
 import com.clone.team4.domain.post.repository.PostRepository;
 import com.clone.team4.domain.user.entity.AccountInfo;
-import com.clone.team4.domain.user.entity.User;
 import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.exception.PermissionDeniedException;
 import com.clone.team4.global.image.ImageFolderEnum;
@@ -26,7 +26,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +41,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostDetailsRepository postDetailsRepository;
     private final CommentRepository commentRepository;
+    private final CommentLikeRepository commentLikeRepository;
     private final LikeRepository likeRepository;
     private final S3ImageUploader s3ImageUploader;
     private final PostServiceHelper postServiceHelper;
@@ -70,7 +70,7 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public BaseResponseDto<?> getPostById(Long postId, AccountInfo accountInfo) {
+    public BaseResponseDto<?> getPostById(Long postId, UserDetailsImpl userDetails) {
 
         Post post = findById(postId);
 
@@ -85,9 +85,19 @@ public class PostService {
         List<CommentResponseDto> commentResponseDtos = commentRepository.findAllByPostId(postId).stream()
                 .map(CommentResponseDto::new)
                 .toList();
+        for (CommentResponseDto commentResponseDto : commentResponseDtos) {
+            commentResponseDto.setLikeCount((long) commentLikeRepository.findAllByCommentId(commentResponseDto.getId()).size());
+            if (userDetails != null) {
+                commentResponseDto.setLike(isCommentLike(commentResponseDto.getId(), userDetails.getAccountInfo().getId()));
+            }
+        }
 
         PostInfoResponseDto postInfoDto = new PostInfoResponseDto(post, postDetailsResponseDtos, commentResponseDtos);
-        postInfoDto.setLike(isLike(postId, accountInfo.getId()));
+
+        if (userDetails != null) {
+            boolean like = isPostLike(postId, userDetails.getAccountInfo().getId());
+            postInfoDto.setLike(like);
+        }
 
         BaseResponseDto<?> response = new BaseResponseDto<>(HttpStatus.OK.toString(), "게시글 조회 성공", postInfoDto);
         return response;
@@ -156,8 +166,16 @@ public class PostService {
                 .orElseThrow(() -> new PostNotFoundException("해당하는 포스트가 없습니다."));
     }
 
-    private boolean isLike(Long postId, Long AccountInfoId) {
-        Like like = likeRepository.findByPostIdAndAccountId(postId, AccountInfoId);
+    private boolean isPostLike(Long postId, Long accountInfoId) {
+        Like like = likeRepository.findByPostIdAndAccountId(postId, accountInfoId);
+        return like != null;
+    }
+
+    private boolean isCommentLike(Long commentId, Long accountInfoId) {
+        log.info("commentId={}", commentId);
+        log.info("accountInfoId={}", accountInfoId);
+        CommentLike like = commentLikeRepository.findByCommentIdAndAccountInfoId(commentId, accountInfoId);
         return like != null;
     }
 }
+
