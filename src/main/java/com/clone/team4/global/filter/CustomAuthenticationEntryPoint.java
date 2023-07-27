@@ -1,7 +1,6 @@
 package com.clone.team4.global.filter;
 
 import com.clone.team4.global.custom.CustomStaticMethodClass;
-import com.clone.team4.global.dto.ErrorLoginMessageDto;
 import com.clone.team4.global.redis.AuthenticationRedisService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

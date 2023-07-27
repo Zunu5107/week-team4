@@ -48,13 +48,13 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity updateAccount(@RequestPart(value = "image", required = false) MultipartFile image,
-                                @RequestPart(value = "nickname", required = false) String nickname,
-                                @RequestPart(value = "introduce", required = false) String introduce,
-                                        @RequestPart String imageUrl,
-                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        if(userDetails == null)
+                                        @RequestPart(value = "nickname", required = false) String nickname,
+                                        @RequestPart(value = "introduce", required = false) String introduce,
+                                        @RequestPart(value = "image", required = false) String image_string,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        if (userDetails == null)
             throw new InsufficientAuthenticationException("회원 정보가 존재하지 않습니다.");
-        BaseResponseDto responseDto = userService.updateAccount(image, nickname, introduce, imageUrl, userDetails);
+        BaseResponseDto responseDto = userService.updateAccount(image, nickname, introduce, image_string, userDetails);
 
         return ResponseEntity.status(200).body(responseDto);
     }

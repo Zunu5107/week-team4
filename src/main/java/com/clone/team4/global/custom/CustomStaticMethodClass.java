@@ -7,9 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 
 import static com.clone.team4.global.redis.AuthenticationRedisService.AuthenticationStringEnum.ACCESS_TOKEN;
 import static com.clone.team4.global.redis.AuthenticationRedisService.AuthenticationStringEnum.REFRESH_TOKEN;

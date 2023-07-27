@@ -3,7 +3,6 @@ package com.clone.team4.domain.mypage.service;
 import com.clone.team4.domain.mypage.dto.MyPagePostResponseDto;
 import com.clone.team4.domain.mypage.dto.MyPageResponseDto;
 import com.clone.team4.domain.mypage.repository.MypageRepository;
-import com.clone.team4.domain.post.dto.PostDetailsResponseDto;
 import com.clone.team4.domain.user.entity.AccountInfo;
 import com.clone.team4.domain.user.repository.AccountInfoRepository;
 import com.clone.team4.global.dto.BaseResponseDto;
