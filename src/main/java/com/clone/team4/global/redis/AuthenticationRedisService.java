@@ -5,6 +5,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+
 @Service
 public class AuthenticationRedisService {
     private final RedisTemplate redisTemplate;
@@ -27,12 +29,20 @@ public class AuthenticationRedisService {
     public boolean existKey(String key) {
         return values.get(key) != null;
     }
+    public Boolean lock(final String key) {
+        return values.setIfAbsent(key, "lock", Duration.ofMillis(3_000));
+    }
+
+    public Boolean unlock(final String key) {
+        return redisTemplate.delete(key);
+    }
 
     public boolean deleteKey(String key) {
         return redisTemplate.delete(key);
     }
 
     public enum AuthenticationStringEnum{
+        LIKE(AuthenticationString.LIKE),
         ACCESS_TOKEN(AuthenticationString.ACCESS),
         REFRESH_TOKEN(AuthenticationString.REFRESH);
 
@@ -47,6 +57,7 @@ public class AuthenticationRedisService {
         }
 
         public static class AuthenticationString {
+            public static final String LIKE = "LIKE_METHOD";
             public static final String ACCESS = "ACCESS_TOKEN";
             public static final String REFRESH = "REFRESH_TOKEN";
         }

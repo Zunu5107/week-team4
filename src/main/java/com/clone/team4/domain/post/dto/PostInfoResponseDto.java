@@ -1,14 +1,12 @@
 package com.clone.team4.domain.post.dto;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.clone.team4.domain.comment.dto.CommentResponseDto;
 import com.clone.team4.domain.post.entity.Post;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
