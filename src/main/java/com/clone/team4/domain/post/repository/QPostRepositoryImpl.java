@@ -23,33 +23,31 @@ public class QPostRepositoryImpl implements QPostRepository{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<Post> findPostsNotDeleted(Pageable pageable) {
+    public List<Post> findPostsNotDeleted() {
         List<Post> posts = jpaQueryFactory.select(post)
                 .from(post)
                 .where(post.deletedAt.isNull())
                 .orderBy(post.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Long> postsCount = getPostsCount();
-        return PageableExecutionUtils.getPage(posts, pageable, postsCount::fetchOne);
+//        JPAQuery<Long> postsCount = getPostsCount();
+//        return PageableExecutionUtils.getPage(posts, pageable, postsCount::fetchOne);
+        return posts;
     }
 
     @Override
-    public Slice<Post> findPostsByCategoryNotDeleted(String category, Pageable pageable) {
+    public List<Post> findPostsByCategoryNotDeleted(String category) {
         List<Post> posts = jpaQueryFactory.select(post)
                 .from(post)
                 .where(post.category.eq(category))
                 .where(post.deletedAt.isNull())
                 .orderBy(post.createdAt.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Long> postsCount = getPostsByCategoryCount(category);
+//        JPAQuery<Long> postsCount = getPostsByCategoryCount(category);
 
-        return PageableExecutionUtils.getPage(posts, pageable, postsCount::fetchOne);
+//        return PageableExecutionUtils.getPage(posts, pageable, postsCount::fetchOne);
+        return posts;
     }
 
 

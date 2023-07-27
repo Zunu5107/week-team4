@@ -22,9 +22,6 @@ import com.clone.team4.global.sercurity.UserDetailsImpl;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,17 +44,17 @@ public class PostService {
     private final PostServiceHelper postServiceHelper;
 
     @Transactional(readOnly = true)
-    public PageDto<?> getPosts(PageParam pageParam) {
+    public BaseResponseDto<?> getPosts(PageParam pageParam) {
         log.info("page param = {}, {}, {}", pageParam.getPage(), pageParam.getSize(), pageParam.getCategory());
-        Pageable pageable = PageRequest.of(pageParam.getPage(), pageParam.getSize());
+//        Pageable pageable = PageRequest.of(pageParam.getPage(), pageParam.getSize());
 
-        Slice<PostResponseDto> postList;
+        List<PostResponseDto> postList;
 
         if (StringUtils.isNullOrEmpty(pageParam.getCategory())) {
-            postList = postRepository.findPostsNotDeleted(pageable).map(PostResponseDto::new);
+            postList = postRepository.findPostsNotDeleted().stream().map(PostResponseDto::new).toList();
         } else {
             postServiceHelper.validateCategory(pageParam.getCategory());
-            postList = postRepository.findPostsByCategoryNotDeleted(pageParam.getCategory(), pageable).map(PostResponseDto::new);
+            postList = postRepository.findPostsByCategoryNotDeleted(pageParam.getCategory()).stream().map(PostResponseDto::new).toList();
         }
 
         for (PostResponseDto postResponseDto : postList) {
@@ -65,8 +62,9 @@ public class PostService {
             postResponseDto.setPostImage(tuple.get(postDetails.image));
             postResponseDto.setContent(tuple.get(postDetails.content));
         }
-        PageDto<List<PostResponseDto>> response = new PageDto<>(postList.hasNext(), postList.getContent());
-        return response;
+//        PageDto<List<PostResponseDto>> response = new PageDto<>(postList.hasNext(), postList.getContent());
+        BaseResponseDto<List<PostResponseDto>> response = new BaseResponseDto<>(HttpStatus.OK.toString(), "조회완료", postList);
+        return  response;
     }
 
     @Transactional(readOnly = true)
