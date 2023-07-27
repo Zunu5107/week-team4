@@ -19,7 +19,7 @@ public class Comment extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+    private Long id;
 
     private String comment;
 
@@ -28,7 +28,7 @@ public class Comment extends Timestamped {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="accountInfo_id")
+    @JoinColumn(name="account_info_id")
     public AccountInfo accountInfo;
 
     public Comment(CommentRequestDto requestDto, Post post, AccountInfo accountInfo) {
@@ -41,15 +41,4 @@ public class Comment extends Timestamped {
         this.comment = requestDto.getComment();
         this.modifiedAt = LocalDateTime.now();
     }
-
-//    private String nickname(AccountInfo accountInfo){
-//        String nickname = accountInfo.getNickname();
-//        return nickname;
-//    };
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name= "user_id")
-//    private AccountInfo accountInfo;
-
-
 }
