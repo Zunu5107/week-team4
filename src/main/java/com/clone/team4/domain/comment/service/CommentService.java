@@ -2,11 +2,10 @@ package com.clone.team4.domain.comment.service;
 
 
 import com.clone.team4.domain.comment.dto.CommentRequestDto;
-import com.clone.team4.domain.comment.dto.CommentResponseDto;
 import com.clone.team4.domain.comment.entity.Comment;
+import com.clone.team4.domain.comment.entity.CommentLike;
 import com.clone.team4.domain.comment.repository.CommentLikeRepository;
 import com.clone.team4.domain.comment.repository.CommentRepository;
-import com.clone.team4.domain.comment.entity.CommentLike;
 import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.domain.post.service.PostService;
 import com.clone.team4.domain.user.entity.AccountInfo;
