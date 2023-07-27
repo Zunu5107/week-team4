@@ -1,6 +1,11 @@
 package com.clone.team4.domain.post.service;
 
 import com.amazonaws.util.StringUtils;
+import com.clone.team4.domain.comment.dto.CommentResponseDto;
+import com.clone.team4.domain.comment.entity.Comment;
+import com.clone.team4.domain.comment.repository.CommentRepository;
+import com.clone.team4.domain.like.entity.Like;
+import com.clone.team4.domain.like.repository.LikeRepository;
 import com.clone.team4.domain.post.dto.*;
 import com.clone.team4.domain.post.entity.Post;
 import com.clone.team4.domain.post.entity.PostDetails;
@@ -8,10 +13,12 @@ import com.clone.team4.domain.post.exception.PostNotFoundException;
 import com.clone.team4.domain.post.repository.PostDetailsRepository;
 import com.clone.team4.domain.post.repository.PostRepository;
 import com.clone.team4.domain.user.entity.AccountInfo;
+import com.clone.team4.domain.user.entity.User;
 import com.clone.team4.global.dto.BaseResponseDto;
 import com.clone.team4.global.exception.PermissionDeniedException;
 import com.clone.team4.global.image.ImageFolderEnum;
 import com.clone.team4.global.image.S3ImageUploader;
+import com.clone.team4.global.sercurity.UserDetailsImpl;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +41,8 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final PostDetailsRepository postDetailsRepository;
+    private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
     private final S3ImageUploader s3ImageUploader;
     private final PostServiceHelper postServiceHelper;
 
@@ -60,9 +70,10 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public BaseResponseDto<?> getPostById(Long postId) {
+    public BaseResponseDto<?> getPostById(Long postId, AccountInfo accountInfo) {
 
         Post post = findById(postId);
+
         if (post.getDeletedAt() != null) {
             throw new IllegalArgumentException("삭제된 게시물 입니다.");
         }
@@ -71,9 +82,14 @@ public class PostService {
                 .map(PostDetailsResponseDto::new)
                 .toList();
 
-        PostInfoResponseDto data = new PostInfoResponseDto(post, postDetailsResponseDtos);
+        List<CommentResponseDto> commentResponseDtos = commentRepository.findAllByPostId(postId).stream()
+                .map(CommentResponseDto::new)
+                .toList();
 
-        BaseResponseDto<?> response = new BaseResponseDto<>(HttpStatus.OK.toString(), "게시글 조회 성공", data);
+        PostInfoResponseDto postInfoDto = new PostInfoResponseDto(post, postDetailsResponseDtos, commentResponseDtos);
+        postInfoDto.setLike(isLike(postId, accountInfo.getId()));
+
+        BaseResponseDto<?> response = new BaseResponseDto<>(HttpStatus.OK.toString(), "게시글 조회 성공", postInfoDto);
         return response;
     }
 
@@ -138,5 +154,10 @@ public class PostService {
     public Post findById(Long postId) {
        return postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException("해당하는 포스트가 없습니다."));
+    }
+
+    private boolean isLike(Long postId, Long AccountInfoId) {
+        Like like = likeRepository.findByPostIdAndAccountId(postId, AccountInfoId);
+        return like != null;
     }
 }
