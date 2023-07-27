@@ -19,7 +19,7 @@ public class PostServiceHelper {
     @Value("${max.image.count}")
     private int MAX_IMAGE_COUNT;
 
-    private final String[] CATEGORY_WHITELIST = {"취미일상","집사진"};
+    private final String[] CATEGORY_WHITELIST = {"dailylife","house"};
 
     public void validPostCreateRequest(List<MultipartFile> images, List<PostRequestDto> contentList, Integer imageCount, String category) {
         validateImageAndContentCount(images, contentList, imageCount);
