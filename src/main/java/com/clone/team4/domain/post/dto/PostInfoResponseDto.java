@@ -21,8 +21,8 @@ public class PostInfoResponseDto {
     private String category;
     private Long likeCount;
     private boolean isLike = false;
-    private List<PostDetailsResponseDto> postDetails = new ArrayList<>();
-    private List<CommentResponseDto> comments = new ArrayList<>();
+    private List<PostDetailsResponseDto> postDetails;
+    private List<CommentResponseDto> comments;
 
     public PostInfoResponseDto(Post post,
                                List<PostDetailsResponseDto> postDetails,
