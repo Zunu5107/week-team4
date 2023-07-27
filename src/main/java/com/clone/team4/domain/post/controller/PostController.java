@@ -31,8 +31,8 @@ public class PostController implements PostExceptionHandler {
     }
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<BaseResponseDto> getPostById(@PathVariable Long postId) {
-        BaseResponseDto<?> response = postService.getPostById(postId);
+    public ResponseEntity<BaseResponseDto> getPostById(@PathVariable Long postId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        BaseResponseDto<?> response = postService.getPostById(postId, userDetails.getAccountInfo());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
